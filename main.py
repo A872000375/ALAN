@@ -20,7 +20,11 @@ JSON_FILE_DEFAULTS = {
     TEMP_KEY: 70
 }
 
-
+CONVERSION_FACTORS = {
+    FREQ_KEY: 1,
+    AMT_KEY: 1,
+    TEMP_KEY: 1
+}
 
 # Init of root/frame
 root = tk.Tk()
