@@ -17,7 +17,7 @@ json_config = None
 JSON_FILE_DEFAULTS = {
     FREQ_KEY: '12',
     AMT_KEY: '1',
-    TEMP_KEY: 70
+    TEMP_KEY: 70.0
 }
 
 CONVERSION_FACTORS = {
@@ -41,7 +41,7 @@ food_freq_var = tk.StringVar()
 # Food Amount Var
 food_amt_var = tk.StringVar()
 # Tank Temperature Var
-tank_temp_var = tk.IntVar()
+tank_temp_var = tk.DoubleVar()
 
 
 # When save_changes_btn is clicked, save current settings and make changes to PID process.
@@ -53,6 +53,8 @@ def save_changes_button():
     print('food_freq_var:', food_freq_var.get())
     print('food_amt_var:', food_amt_var.get())
     print('tank_temp_var:', tank_temp_var.get())
+
+    save_json_config()
 
 
 def load_json_config():
@@ -67,30 +69,39 @@ def load_json_config():
             print('JSON Config File Found:', json_config)
     else:
         # Initialize JSON config file
-        with open(JSON_FILE_NAME, 'w') as file:
-            json_str = json.dumps(JSON_FILE_DEFAULTS)
-            file.write(json_str)
-            print('Initializing JSON Config File.')
         json_config = JSON_FILE_DEFAULTS
+        print('Initializing JSON File Config Defaults.')
+        save_json_config()
 
     # Load JSON Configs into Vars
     food_freq_var.set(json_config.get(FREQ_KEY))
     food_amt_var.set(json_config.get(AMT_KEY))
-    temp_int = JSON_FILE_DEFAULTS[TEMP_KEY]
+    temp_dbl = JSON_FILE_DEFAULTS[TEMP_KEY]
     try:
-        temp_int = int(json_config.get(TEMP_KEY))
+        temp_dbl = float(json_config.get(TEMP_KEY))
     except ValueError as e:
         print('Configuration file has been incorrectly altered. Setting Tank Temperature to default value.')
         json_config[TEMP_KEY] = JSON_FILE_DEFAULTS[TEMP_KEY]
-        save_json_config()
 
-    tank_temp_var.set(temp_int)
+    tank_temp_var.set(temp_dbl)
+
+    save_json_config()  # Keep as last
 
 
 def save_json_config():
     global food_freq_var, food_amt_var, tank_temp_var, \
         json_config, JSON_FILE_DEFAULTS, JSON_FILE_NAME, \
         TEMP_KEY, FREQ_KEY, AMT_KEY
+
+    json_config[FREQ_KEY] = food_freq_var.get()
+    json_config[AMT_KEY] = food_amt_var.get()
+    json_config[TEMP_KEY] = tank_temp_var.get()
+
+    json_str = json.dumps(json_config)
+    with open(JSON_FILE_NAME, 'w') as file:
+        file.write(json_str)
+        print('Saved JSON Configuration')
+
 
 load_json_config()
 
@@ -119,9 +130,8 @@ tank_temp_lbl = ttk.Label(frame, text='Tank Temperature (°F):', padding=LABEL_P
 tank_temp_lbl.grid(row=4, column=1, sticky=tk.E)
 # Tank Temperature Slider (Scale)
 # Note: Fish usually live in water between 55F and 85F
-tank_temp_scl = ttk.LabeledScale(frame, variable=tank_temp_var, from_=55, to=85)
+tank_temp_scl = ttk.LabeledScale(frame, variable=tank_temp_var, from_=55.0, to=85.0)
 tank_temp_scl.grid(row=4, column=2, sticky=tk.W)
-
 # Save Changes Button
 save_changes_btn = ttk.Button(frame, text='Save Changes', command=save_changes_button, width=50)
 save_changes_btn.grid(row=100, column=1, columnspan=4, sticky=tk.W)
