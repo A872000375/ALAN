@@ -42,6 +42,8 @@ food_freq_var = tk.StringVar()
 food_amt_var = tk.StringVar()
 # Tank Temperature Var
 tank_temp_var = tk.DoubleVar()
+# Tank Temperature Label
+temp_str = tk.StringVar()
 
 
 # When save_changes_btn is clicked, save current settings and make changes to PID process.
@@ -82,7 +84,6 @@ def load_json_config():
     except ValueError as e:
         print('Configuration file has been incorrectly altered. Setting Tank Temperature to default value.')
         json_config[TEMP_KEY] = JSON_FILE_DEFAULTS[TEMP_KEY]
-
     tank_temp_var.set(temp_dbl)
 
     save_json_config()  # Keep as last
@@ -93,8 +94,11 @@ def save_json_config():
         json_config, JSON_FILE_DEFAULTS, JSON_FILE_NAME, \
         TEMP_KEY, FREQ_KEY, AMT_KEY
 
-    json_config[FREQ_KEY] = food_freq_var.get()
-    json_config[AMT_KEY] = food_amt_var.get()
+    json_config[FREQ_KEY] = food_freq_var.get() \
+        if food_freq_var.get() != '' and food_freq_var.get() is not None else JSON_FILE_DEFAULTS[FREQ_KEY]
+    json_config[AMT_KEY] = food_amt_var.get() \
+        if food_amt_var.get() != '' and food_amt_var.get() is not None else JSON_FILE_DEFAULTS[AMT_KEY]
+
     json_config[TEMP_KEY] = tank_temp_var.get()
 
     json_str = json.dumps(json_config)
@@ -103,8 +107,13 @@ def save_json_config():
         print('Saved JSON Configuration')
 
 
-load_json_config()
+def update_temp_label(value):
+    temp_val = tank_temp_var.get()
+    temp_formatted = f'{temp_val:2.1f}°F'
+    temp_str.set(temp_formatted)
 
+
+load_json_config()
 # FOOD FREQUENCY
 
 # Food Frequency Label
@@ -126,15 +135,20 @@ food_amt_ent.grid(row=3, column=2, columnspan=2, sticky=tk.W)
 # TANK TEMPERATURE
 
 # Tank Temperature Label
-tank_temp_lbl = ttk.Label(frame, text='Tank Temperature (°F):', padding=LABEL_PADDING, justify=tk.RIGHT)
+tank_temp_lbl = ttk.Label(frame, text='Tank Temperature:', padding=LABEL_PADDING, justify=tk.RIGHT)
 tank_temp_lbl.grid(row=4, column=1, sticky=tk.E)
+temp_lbl = ttk.Label(frame, textvariable=temp_str, padding=LABEL_PADDING, justify=tk.LEFT)
+temp_lbl.grid(row=4, column=2, sticky=tk.W)
 # Tank Temperature Slider (Scale)
 # Note: Fish usually live in water between 55F and 85F
-tank_temp_scl = ttk.LabeledScale(frame, variable=tank_temp_var, from_=55.0, to=85.0)
-tank_temp_scl.grid(row=4, column=2, sticky=tk.W)
+tank_temp_scl = ttk.Scale(frame, variable=tank_temp_var, from_=55.0, to=85.0, command=update_temp_label)
+tank_temp_scl.grid(row=4, column=3, sticky=tk.W)
 # Save Changes Button
 save_changes_btn = ttk.Button(frame, text='Save Changes', command=save_changes_button, width=50)
 save_changes_btn.grid(row=100, column=1, columnspan=4, sticky=tk.W)
+
+update_temp_label(None)
+
 
 # Start Program
 root.mainloop()
