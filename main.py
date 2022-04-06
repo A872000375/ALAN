@@ -4,6 +4,13 @@ from tkinter import ttk
 import json
 from os import path
 
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from google.auth.transport.requests import Request
+from googleapiclient.http import MediaFileUpload
+
 FREQ_KEY = 'food_freq_var'
 AMT_KEY = 'food_amt_var'
 TEMP_KEY = 'tank_temp_var'
@@ -19,12 +26,61 @@ JSON_FILE_DEFAULTS = {
     AMT_KEY: '1',
     TEMP_KEY: 70.0
 }
-
+SCOPES = ['https://www.googleapis.com/auth/userinfo.email', 'openid']
 CONVERSION_FACTORS = {
     FREQ_KEY: 1,
     AMT_KEY: 1,
     TEMP_KEY: 1
 }
+
+drive_service = None
+
+
+def login_redirect_google():
+    global drive_service
+    creds = None
+    # The file token.json stores the user's access and refresh tokens, and is
+    # created automatically when the authorization flow completes for the first
+    # time.
+    if path.exists('token.json'):
+        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token.json', 'w') as token:
+            token.write(creds.to_json())
+
+    try:
+        drive_service = build('drive', 'v3', credentials=creds)
+
+        # Call the Drive v3 API
+        results = drive_service.files().list(
+            pageSize=10, fields="nextPageToken, files(id, name)").execute()
+        items = results.get('files', [])
+
+        if not items:
+            print('No files found.')
+            return
+        print('Files:')
+        for item in items:
+            print(u'{0} ({1})'.format(item['name'], item['id']))
+    except HttpError as error:
+        # TODO(developer) - Handle errors from drive API.
+        print(f'An error occurred: {error}')
+
+
+# login_redirect_google()
+
+# JSON_MIME = 'application/json'
+# file_metadata = {'name': 'smart_tank_config.json'}
+# file_media = MediaFileUpload('smart_tank_config.json', mimetype=JSON_MIME)
+# file = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
 
 # Init of root/frame
 root = tk.Tk()
@@ -148,7 +204,6 @@ save_changes_btn = ttk.Button(frame, text='Save Changes', command=save_changes_b
 save_changes_btn.grid(row=100, column=1, columnspan=4, sticky=tk.W)
 
 update_temp_label(None)
-
 
 # Start Program
 root.mainloop()
