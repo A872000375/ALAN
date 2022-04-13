@@ -1,4 +1,6 @@
 # !pip install tkinter
+import io
+import os
 import tkinter as tk
 from tkinter import ttk
 import json
@@ -11,9 +13,10 @@ from googleapiclient.errors import HttpError
 from google.auth.transport.requests import Request
 from datetime import datetime
 from googleapiclient.http import MediaFileUpload
+from googleapiclient.http import MediaIoBaseDownload
 
 DEBUG_MODE = False
-
+google_drive_connected = False
 FREQ_KEY = 'food_freq_var'
 AMT_KEY = 'food_amt_var'
 TEMP_KEY = 'tank_temp_var'
@@ -61,7 +64,8 @@ def login_redirect_google():
 
     try:
         drive_service = build('drive', 'v3', credentials=creds)
-
+        print('Logged in to Google Drive.')
+        google_drive_connected = True
         if DEBUG_MODE:
             # Call the Drive v3 API
             results = drive_service.files().list(
@@ -78,12 +82,12 @@ def login_redirect_google():
         # TODO(developer) - Handle errors from drive API.
         print(f'An error occurred: {error}')
 
-    print('Logged in to Google Drive.')
+
 
 
 login_redirect_google()
 
-# JSON_MIME = 'application/json'
+JSON_MIME = 'application/json'
 # file_metadata = {'name': 'smart_tank_config.json'}
 # file_media = MediaFileUpload('smart_tank_config.json', mimetype=JSON_MIME)
 # file = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
@@ -124,19 +128,60 @@ def save_changes_button():
 
 def sync_json_to_google_drive():
     global drive_service, json_config, JSON_FILE_NAME
-    if drive_service is None:
-        print('Google Cloud syncing is offline. Please relaunch the app to retry.')
+    if drive_service is None or not google_drive_connected:
+        print('Google Cloud syncing is offline. \nPlease relaunch the app to retry, or continue using in Offline Mode.')
 
-    last_modified_local = datetime.fromtimestamp(path.getmtime(JSON_FILE_NAME))
-    print(type(last_modified_local))
-    print('Local version was last modified at:', last_modified_local)
+    localcopy_lastmod = datetime.fromtimestamp(path.getmtime(JSON_FILE_NAME))
+    print(type(localcopy_lastmod))
+    print('Local version was last modified at:', localcopy_lastmod)
     print('Syncing to Google Drive...')
     g_file = drive_service.files().list(pageSize=10, q=f"name ='{JSON_FILE_NAME}'",
                                         fields="nextPageToken, files(id, name, modifiedTime, createdTime)").execute()
     items = g_file.get('files', [])
     if items is None:
         print('Could not retrieve files from Google Drive.')
+        print('Uploading local version to Drive.')
+        file_metadata = {'name': 'smart_tank_config.json'}
+        file_media = MediaFileUpload('smart_tank_config.json', mimetype=JSON_MIME)
+        drivecopy = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
         return
+
+    for drivecopy in items:
+        drivecopy_lastmod = drivecopy.get('lastModified')
+        drivecopy_id = drivecopy.get('id')
+
+        print(type(drivecopy_lastmod))
+        print('Google Drive version was last modified:', drivecopy_lastmod)
+        if localcopy_lastmod > drivecopy_lastmod:
+            # This means that the local copy is newer
+            drive_service.files().delete(fileId=drivecopy_id)  # Delete the current drive copy
+
+            upload_localcopy_to_google_drive()  #
+        elif localcopy_lastmod < drivecopy_lastmod:
+            pass
+            # this means that the local copy is older
+            os.remove(JSON_FILE_NAME)  # delete local copy
+            # Start download process
+            request = drive_service.files().get_media(fileId=drivecopy_id)
+            fh = io.BytesIO()
+            downloader = MediaIoBaseDownload(fh, request)
+            done = False
+            while not done:
+                status, done = downloader.next_chunk()
+                print(f'Downloading... {int(status.progress() * 100)}%')
+            print('Download complete.')
+        else:
+            pass
+            # This means that the local and google drive copies are the same last modified.
+            print('Versions are synced between drive and local copy.')
+
+
+def upload_localcopy_to_google_drive():
+    global JSON_FILE_NAME
+    file_metadata = {'name': JSON_FILE_NAME}
+    file_media = MediaFileUpload(JSON_FILE_NAME, mimetype=JSON_MIME)
+    drivecopy = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
+    print('Uploaded local copy to Google Drive.')
 
 
 def load_json_config():
