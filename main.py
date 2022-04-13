@@ -26,7 +26,7 @@ JSON_FILE_DEFAULTS = {
     AMT_KEY: '1',
     TEMP_KEY: 70.0
 }
-SCOPES = ['https://www.googleapis.com/auth/userinfo.email', 'openid']
+SCOPES = ['https://www.googleapis.com/auth/drive']
 CONVERSION_FACTORS = {
     FREQ_KEY: 1,
     AMT_KEY: 1,
@@ -74,13 +74,15 @@ def login_redirect_google():
         # TODO(developer) - Handle errors from drive API.
         print(f'An error occurred: {error}')
 
+    print('Logged in to Google Drive.')
 
-# login_redirect_google()
 
-# JSON_MIME = 'application/json'
-# file_metadata = {'name': 'smart_tank_config.json'}
-# file_media = MediaFileUpload('smart_tank_config.json', mimetype=JSON_MIME)
-# file = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
+login_redirect_google()
+
+JSON_MIME = 'application/json'
+file_metadata = {'name': 'smart_tank_config.json'}
+file_media = MediaFileUpload('smart_tank_config.json', mimetype=JSON_MIME)
+file = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
 
 # Init of root/frame
 root = tk.Tk()
