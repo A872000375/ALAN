@@ -9,7 +9,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.auth.transport.requests import Request
+from datetime import datetime
 from googleapiclient.http import MediaFileUpload
+
+DEBUG_MODE = False
 
 FREQ_KEY = 'food_freq_var'
 AMT_KEY = 'food_amt_var'
@@ -37,7 +40,7 @@ drive_service = None
 
 
 def login_redirect_google():
-    global drive_service
+    global drive_service, DEBUG_MODE
     creds = None
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
@@ -59,17 +62,18 @@ def login_redirect_google():
     try:
         drive_service = build('drive', 'v3', credentials=creds)
 
-        # Call the Drive v3 API
-        results = drive_service.files().list(
-            pageSize=10, fields="nextPageToken, files(id, name)").execute()
-        items = results.get('files', [])
+        if DEBUG_MODE:
+            # Call the Drive v3 API
+            results = drive_service.files().list(
+                pageSize=10, fields="nextPageToken, files(id, name)").execute()
+            items = results.get('files', [])
 
-        if not items:
-            print('No files found.')
-            return
-        print('Files:')
-        for item in items:
-            print(u'{0} ({1})'.format(item['name'], item['id']))
+            if not items:
+                print('No files found.')
+                return
+            print('Files:')
+            for item in items:
+                print(u'{0} ({1})'.format(item['name'], item['id']))
     except HttpError as error:
         # TODO(developer) - Handle errors from drive API.
         print(f'An error occurred: {error}')
@@ -79,10 +83,10 @@ def login_redirect_google():
 
 login_redirect_google()
 
-JSON_MIME = 'application/json'
-file_metadata = {'name': 'smart_tank_config.json'}
-file_media = MediaFileUpload('smart_tank_config.json', mimetype=JSON_MIME)
-file = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
+# JSON_MIME = 'application/json'
+# file_metadata = {'name': 'smart_tank_config.json'}
+# file_media = MediaFileUpload('smart_tank_config.json', mimetype=JSON_MIME)
+# file = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
 
 # Init of root/frame
 root = tk.Tk()
@@ -115,6 +119,24 @@ def save_changes_button():
     print('tank_temp_var:', tank_temp_var.get())
 
     save_json_config()
+    sync_json_to_google_drive()
+
+
+def sync_json_to_google_drive():
+    global drive_service, json_config, JSON_FILE_NAME
+    if drive_service is None:
+        print('Google Cloud syncing is offline. Please relaunch the app to retry.')
+
+    last_modified_local = datetime.fromtimestamp(path.getmtime(JSON_FILE_NAME))
+    print(type(last_modified_local))
+    print('Local version was last modified at:', last_modified_local)
+    print('Syncing to Google Drive...')
+    g_file = drive_service.files().list(pageSize=10, q=f"name ='{JSON_FILE_NAME}'",
+                                        fields="nextPageToken, files(id, name, modifiedTime, createdTime)").execute()
+    items = g_file.get('files', [])
+    if items is None:
+        print('Could not retrieve files from Google Drive.')
+        return
 
 
 def load_json_config():
