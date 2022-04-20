@@ -263,7 +263,7 @@ food_amt_ent.grid(row=3, column=2, columnspan=2, sticky=tk.W)
 tank_temp_lbl = ttk.Label(frame, text='Tank Temperature:', padding=LABEL_PADDING, justify=tk.RIGHT)
 tank_temp_lbl.grid(row=4, column=1, sticky=tk.E)
 temp_lbl = ttk.Label(frame, textvariable=temp_str, padding=LABEL_PADDING, justify=tk.LEFT)
-temp_lbl.grid(row=4, column=2, sticky=tk.W)
+temp_lbl.grid(row=4, column=2, stixcky=tk.W)
 # Tank Temperature Slider (Scale)
 # Note: Fish usually live in water between 55F and 85F
 tank_temp_scl = ttk.Scale(frame, variable=tank_temp_var, from_=55.0, to=85.0, command=update_temp_label)
