@@ -1,4 +1,4 @@
-# !pip install tkinter
+# !pip install tk
 import io
 import os
 import tkinter as tk
