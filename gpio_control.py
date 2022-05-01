@@ -15,13 +15,17 @@ class Control:
         GPIO.setup(self.HEATER_PIN, GPIO.OUT)
 
     def heater_toggle(self, status: bool):
-        previous = GPIO.input(self.HEATER_PIN)
+        previous = self.get_heater_status_readable()
         if status is True:
             GPIO.output(self.HEATER_PIN, GPIO.HIGH)
         else:
             GPIO.output(self.HEATER_PIN, GPIO.LOW)
 
-        print(f'Heater was changed from {convert(previous)} to {convert(status)}')
+        print(f'Heater was changed from {previous} to {convert(status)}')
 
+    def get_heater_status_readable(self):
+        return convert(GPIO.input(self.HEATER_PIN))
 
+    def get_raw_heater_status(self):
+        return GPIO.input(self.HEATER_PIN)
 
