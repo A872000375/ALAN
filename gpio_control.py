@@ -7,6 +7,7 @@ def convert(self, status):
     else:
         return 'LOW'
 
+
 class Control:
 
     def __init__(self):
@@ -28,4 +29,3 @@ class Control:
 
     def get_raw_heater_status(self):
         return GPIO.input(self.HEATER_PIN)
-
