@@ -5,16 +5,20 @@ import tkinter as tk
 from tkinter import ttk
 import json
 from os import path
+from datetime import datetime
+from time import sleep
 
+
+# Google Api Imports
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from google.auth.transport.requests import Request
-from datetime import datetime
 from googleapiclient.http import MediaFileUpload
 from googleapiclient.http import MediaIoBaseDownload
 
+from gpio_control import Control, convert
 DEBUG_MODE = False
 google_drive_connected = False
 FREQ_KEY = 'food_freq_var'
@@ -40,7 +44,7 @@ CONVERSION_FACTORS = {
 }
 
 drive_service = None
-
+controller = Control()
 
 def login_redirect_google():
     global drive_service, DEBUG_MODE
@@ -158,18 +162,7 @@ def sync_json_to_google_drive():
 
             upload_localcopy_to_google_drive()  #
         elif localcopy_lastmod < drivecopy_lastmod:
-            pass
-            # this means that the local copy is older
-            os.remove(JSON_FILE_NAME)  # delete local copy
-            # Start download process
-            request = drive_service.files().get_media(fileId=drivecopy_id)
-            fh = io.BytesIO()
-            downloader = MediaIoBaseDownload(fh, request)
-            done = False
-            while not done:
-                status, done = downloader.next_chunk()
-                print(f'Downloading... {int(status.progress() * 100)}%')
-            print('Download complete.')
+            replace_local_with_remote_json(drivecopy_id)
         else:
             pass
             # This means that the local and google drive copies are the same last modified.
@@ -183,6 +176,19 @@ def upload_localcopy_to_google_drive():
     drivecopy = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
     print('Uploaded local copy to Google Drive.')
 
+def replace_local_with_remote_json(drivecopy_id):
+    global drive_service
+    # this means that the local copy is older
+    os.remove(JSON_FILE_NAME)  # delete local copy
+    # Start download process
+    request = drive_service.files().get_media(fileId=drivecopy_id)
+    fh = io.BytesIO()
+    downloader = MediaIoBaseDownload(fh, request)
+    done = False
+    while not done:
+        status, done = downloader.next_chunk()
+        print(f'Downloading... {int(status.progress() * 100)}%')
+    print('Download complete.')
 
 def load_json_config():
     global food_freq_var, food_amt_var, tank_temp_var, \
@@ -198,18 +204,20 @@ def load_json_config():
         # Initialize JSON config file
         json_config = JSON_FILE_DEFAULTS
         print('Initializing JSON File Config Defaults.')
-        save_json_config()
+        # save_json_config()
 
     # Load JSON Configs into Vars
     food_freq_var.set(json_config.get(FREQ_KEY))
     food_amt_var.set(json_config.get(AMT_KEY))
     temp_dbl = JSON_FILE_DEFAULTS[TEMP_KEY]
+    print('config test',json_config.get(TEMP_KEY))
     try:
         temp_dbl = float(json_config.get(TEMP_KEY))
     except ValueError as e:
         print('Configuration file has been incorrectly altered. Setting Tank Temperature to default value.')
         json_config[TEMP_KEY] = JSON_FILE_DEFAULTS[TEMP_KEY]
     tank_temp_var.set(temp_dbl)
+    print(temp_dbl)
 
     save_json_config()  # Keep as last
 
@@ -233,12 +241,14 @@ def save_json_config():
 
 
 def update_temp_label(value):
+    print(value)
     temp_val = tank_temp_var.get()
     temp_formatted = f'{temp_val:2.1f}°F'
     temp_str.set(temp_formatted)
 
 
 load_json_config()
+update_temp_label(None)
 # FOOD FREQUENCY
 
 # Food Frequency Label
@@ -272,7 +282,15 @@ tank_temp_scl.grid(row=4, column=3, sticky=tk.W)
 save_changes_btn = ttk.Button(frame, text='Save Changes', command=save_changes_button, width=50)
 save_changes_btn.grid(row=100, column=1, columnspan=4, sticky=tk.W)
 
-update_temp_label(None)
+def test_heater():
+    global controller
+    controller.heater_toggle(True)
+    sleep(60)
+    controller.heater_toggle(False)
+
+test_heater()
 
 # Start Program
 root.mainloop()
+save_json_config()
+upload_localcopy_to_google_drive()
