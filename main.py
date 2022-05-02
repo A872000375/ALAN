@@ -8,7 +8,6 @@ from os import path
 from datetime import datetime
 from time import sleep
 
-
 # Google Api Imports
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -19,6 +18,7 @@ from googleapiclient.http import MediaFileUpload
 from googleapiclient.http import MediaIoBaseDownload
 
 from gpio_control import Control, convert
+
 DEBUG_MODE = False
 google_drive_connected = False
 FREQ_KEY = 'food_freq_var'
@@ -45,6 +45,7 @@ CONVERSION_FACTORS = {
 
 drive_service = None
 controller = Control()
+
 
 def login_redirect_google():
     global drive_service, DEBUG_MODE
@@ -85,8 +86,6 @@ def login_redirect_google():
     except HttpError as error:
         # TODO(developer) - Handle errors from drive API.
         print(f'An error occurred: {error}')
-
-
 
 
 login_redirect_google()
@@ -176,6 +175,7 @@ def upload_localcopy_to_google_drive():
     drivecopy = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
     print('Uploaded local copy to Google Drive.')
 
+
 def replace_local_with_remote_json(drivecopy_id):
     global drive_service
     # this means that the local copy is older
@@ -189,6 +189,7 @@ def replace_local_with_remote_json(drivecopy_id):
         status, done = downloader.next_chunk()
         print(f'Downloading... {int(status.progress() * 100)}%')
     print('Download complete.')
+
 
 def load_json_config():
     global food_freq_var, food_amt_var, tank_temp_var, \
@@ -210,7 +211,7 @@ def load_json_config():
     food_freq_var.set(json_config.get(FREQ_KEY))
     food_amt_var.set(json_config.get(AMT_KEY))
     temp_dbl = JSON_FILE_DEFAULTS[TEMP_KEY]
-    print('config test',json_config.get(TEMP_KEY))
+    print('config test', json_config.get(TEMP_KEY))
     try:
         temp_dbl = float(json_config.get(TEMP_KEY))
     except ValueError as e:
@@ -276,17 +277,19 @@ temp_lbl = ttk.Label(frame, textvariable=temp_str, padding=LABEL_PADDING, justif
 temp_lbl.grid(row=4, column=2, sticky=tk.W)
 # Tank Temperature Slider (Scale)
 # Note: Fish usually live in water between 55F and 85F
-tank_temp_scl = ttk.Scale(frame, variable=tank_temp_var, from_=55.0, to=85.0, command=update_temp_label)
+tank_temp_scl = ttk.Scale(frame, variable=tank_temp_var, from_=68.0, to=93.0, command=update_temp_label)
 tank_temp_scl.grid(row=4, column=3, sticky=tk.W)
 # Save Changes Button
 save_changes_btn = ttk.Button(frame, text='Save Changes', command=save_changes_button, width=50)
 save_changes_btn.grid(row=100, column=1, columnspan=4, sticky=tk.W)
+
 
 def test_heater():
     global controller
     controller.heater_toggle(True)
     sleep(60)
     controller.heater_toggle(False)
+
 
 test_heater()
 
