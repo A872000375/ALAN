@@ -17,7 +17,7 @@ from google.auth.transport.requests import Request
 from googleapiclient.http import MediaFileUpload
 from googleapiclient.http import MediaIoBaseDownload
 
-from gpio_control import Control, convert
+from tools.gpio_control import Control
 
 DEBUG_MODE = False
 google_drive_connected = False
@@ -290,9 +290,16 @@ def test_heater():
     sleep(60)
     controller.heater_toggle(False)
 
+def test_pixel_strip():
+    try:
+        from tools.rgb_neopixel import RGBController
+        strip = RGBController()
+        strip.set_pixel(0, (0, 255, 0))
+    except Exception as e:
+        print('Could not start up RGB Controller.')
 
 test_heater()
-
+test_pixel_strip()
 # Start Program
 root.mainloop()
 save_json_config()

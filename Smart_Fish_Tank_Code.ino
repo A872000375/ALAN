@@ -21,8 +21,6 @@ void setup() {
   sensors.begin();
   myservo.attach(9);
   delay (50);
-
-
 }
 
 void loop() {
