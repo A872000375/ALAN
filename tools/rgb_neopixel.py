@@ -1,6 +1,6 @@
 import board
 from neopixel import NeoPixel
-
+from time import sleep
 class RGBController:
 
 
@@ -10,6 +10,7 @@ class RGBController:
         self.pixels = NeoPixel()
         for x in range(255):
             self.pixels.fill((x, 0, x))
+            sleep(0.1)
 
         self.pixels.fill((0, 0, 0))
 

@@ -294,7 +294,7 @@ def test_pixel_strip():
     try:
         from tools.rgb_neopixel import RGBController
         strip = RGBController()
-        strip.set_pixel(0, (0, 255, 0))
+        strip.set_pixel(0, (255, 255, 0))
     except Exception as e:
         print('Could not start up RGB Controller.')
 
