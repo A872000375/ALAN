@@ -7,7 +7,7 @@ class RGBController:
     def __init__(self):
         self.MAX_PIXEL_RANGE = 59 # there are only 60 pixels
 
-        self.pixels = NeoPixel()
+        self.pixels = NeoPixel(board.GPIO4, 60)
         for x in range(255):
             self.pixels.fill((x, 0, x))
             sleep(0.1)
