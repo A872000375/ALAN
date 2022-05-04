@@ -17,7 +17,8 @@ from google.auth.transport.requests import Request
 from googleapiclient.http import MediaFileUpload
 from googleapiclient.http import MediaIoBaseDownload
 
-from tools.gpio_control import Control
+# GPIO Controller Class
+from tools.pi_io import PiIo
 
 DEBUG_MODE = False
 google_drive_connected = False
@@ -283,12 +284,14 @@ tank_temp_scl.grid(row=4, column=3, sticky=tk.W)
 save_changes_btn = ttk.Button(frame, text='Save Changes', command=save_changes_button, width=50)
 save_changes_btn.grid(row=100, column=1, columnspan=4, sticky=tk.W)
 
+
 #
 def test_heater():
     global controller
     controller.heater_toggle(True)
     sleep(60)
     controller.heater_toggle(False)
+
 
 def test_pixel_strip():
     try:
@@ -298,6 +301,13 @@ def test_pixel_strip():
     except Exception as e:
         print('Could not start up RGB Controller.')
 
+
+tkvars = {
+    'freq': food_freq_var,
+    'amt': food_amt_var,
+    'temp': tank_temp_var
+}
+piio = PiIo(tkvars)
 test_heater()
 test_pixel_strip()
 # Start Program
