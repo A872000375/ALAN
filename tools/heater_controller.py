@@ -1,9 +1,4 @@
 import RPi.GPIO as GPIO
-import adafruit_ads1x15.ads1115 as ADS
-from adafruit_ads1x15.analog_in import AnalogIn
-import board
-import busio
-import math
 
 
 def convert(self, status):
@@ -13,20 +8,14 @@ def convert(self, status):
         return 'LOW'
 
 
-class Control:
+class HeaterController:
 
     def __init__(self):
-        self.i2c = busio.I2C(board.SCL, board.SDA)
 
         # Heater setup
         self.HEATER_PIN = 36
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.HEATER_PIN, GPIO.OUT)
-
-        # Temperature Sensor setup
-        self.ads = ADS.ADS1115(self.i2c)
-        # do I add this? : self.ads.mode = Mode.CONTINUOUS (where to import Mode?)
-        self.temp_sensor = AnalogIn(self.ads, ADS.P0)
 
     def heater_toggle(self, status: bool):
         previous = self.get_heater_status_readable()

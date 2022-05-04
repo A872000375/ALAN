@@ -2,13 +2,14 @@ import gpio as io
 import time
 from temp_reader import TempReader
 from threading import Thread
-
+from heater_controller import HeaterController
 
 # This is the GPIO Controller Class
 class PiIo:
 
     # passthrough tkinter variables for the thread to check
     def __init__(self, tk_vars: dict):
+        self.heat_control = HeaterController()
         self.DEBUG_MODE = True
         self.pin_map = {
             'sonar_trig': 10,  # TrigPin
@@ -44,12 +45,11 @@ class PiIo:
             temp_needed = target_temp - current_temp
             if temp_needed > 2.0:
                 # Turn on the heater
-                pass
+                self.heat_control.heater_toggle(True)
             elif temp_needed < -2.0:
                 # Turn off the heater
-                pass
-            else:
-                print('Temp error occurred.')
+                self.heat_control.heater_toggle(False)
+
 
     def get_temp_f(self):
         return self.temp_reader.read_temp()[1]
