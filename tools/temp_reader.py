@@ -6,10 +6,10 @@ import time
 class TempReader:
 
     def __init__(self):
-        os.system('sudo dtoverlay w1-gpio gpiopin=6 pullup=0')
-        os.system('sudo dtoverlay w1-gpio gpiopin=4 pullup=0')
-        os.system('sudo modprobe w1-gpio')
-        os.system('sudo modprobe w1-therm')
+        os.system('dtoverlay w1-gpio gpiopin=6 pullup=0')
+        os.system('dtoverlay w1-gpio gpiopin=4 pullup=0')
+        os.system('modprobe w1-gpio')
+        os.system('modprobe w1-therm')
 
         self.base_dir = '/sys/bus/w1/devices/'
         self.device_folder = glob.glob(self.base_dir + '28*')[0]
