@@ -24,7 +24,8 @@ class TempReader:
     def read_temp(self):
         lines = self.read_temp_raw()
         while lines[0].strip()[-3:] != 'YES':
-            time.sleep(0.2)
+            time.sleep
+        # NO SPACES IN DTOVERLAY, YOU NEED TO CHANGE IT FOR IT TO BE FIXED(0.2)
             lines = self.read_temp_raw()
         equals_pos = lines[1].find('t=')
         if equals_pos != -1:

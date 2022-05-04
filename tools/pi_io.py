@@ -1,6 +1,7 @@
 import gpio as io
 import time
-from temp_reader
+from temp_reader import TempReader
+
 
 class PiIo:
 
@@ -10,13 +11,22 @@ class PiIo:
             'sonar_trig': 10,  # TrigPin
             'sonar_echo': 11,
             'servo': 9,
-            'temp': 5r
+            'temp': 5
         }
         io.setmode(io.BCM)
         io.setup(self.pin_map['sonar_trig'], io.OUT)
         io.setup(self.pin_map['sonar_echo'], io.IN)
 
-        self.temp_reader =
+        self.temp_reader = TempReader()
+
+    def get_temp_f(self):
+        return self.temp_reader.read_temp()[1]
+
+    def get_temp_c(self):
+        return self.temp_reader.read_temp()[0]
+
+    def get_all_temps(self):
+        return self.temp_reader.read_temp()
 
     def read_sonar_ping(self):
         io.output(self.pin_map['sonar_trig'], io.LOW)
