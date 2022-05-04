@@ -6,7 +6,7 @@ import time
 class TempReader:
 
     def __init__(self):
-        os.system('dtoverlay w1-gpio gpiopin=17 pullup=0')
+        os.system('dtoverlay w1-gpio gpiopin=6 pullup=0')
         os.system('dtoverlay w1-gpio gpiopin=4 pullup=0')
         os.system('modprobe w1-gpio')
         os.system('modprobe w1-therm')
