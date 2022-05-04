@@ -48,6 +48,11 @@ class Control:
     def convert_temp_value_to_fahrenheit(self, value=None):
         if value is None:
             value = self.chan.value
+
+        
+
+
+
         # https://www.instructables.com/16-bit-I2C-Temperature-Monitor-Using-Arduino/
         # ref_current = 0.0001
         # therm_25 = 10000
