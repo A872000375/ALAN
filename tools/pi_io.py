@@ -57,10 +57,10 @@ class PiIo:
                 print('Could not convert target temp')
                 return
 
-
-            print(current_temp)
-
             temp_needed = target_temp - current_temp
+            print('Current Temp:', current_temp)
+            print('Target Temp:', target_temp)
+            print('Temp Deltas:', temp_needed)
             if temp_needed > 0.5:
                 # Turn on the heater
                 self.heat_control.heater_toggle(True)
@@ -68,7 +68,7 @@ class PiIo:
                 # Turn off the heater
                 self.heat_control.heater_toggle(False)
 
-            sleep(1)
+            sleep(10)
         print('Temperature manager daemon has been terminated.')
 
     def get_temp_f(self):
