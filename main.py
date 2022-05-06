@@ -19,7 +19,7 @@ from googleapiclient.http import MediaIoBaseDownload
 
 # GPIO Controller Class
 from tools.pi_io import PiIo
-
+from RPi import GPIO
 DEBUG_MODE = False
 google_drive_connected = False
 FREQ_KEY = 'food_freq_var'
@@ -306,3 +306,6 @@ piio = PiIo(tkvars)
 root.mainloop()
 save_json_config()
 upload_localcopy_to_google_drive()
+
+# Needs to stay at bottom of code
+GPIO.cleanup()
