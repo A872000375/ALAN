@@ -10,6 +10,8 @@ class PiIo:
     # passthrough tkinter variables for the thread to check
     def __init__(self, tk_vars: dict):
         self.heat_control = HeaterController()
+        self.temp_reader = TempReader()
+
         self.DEBUG_MODE = True
         self.pin_map = {
             'sonar_trig': 10,  # TrigPin
@@ -21,7 +23,6 @@ class PiIo:
         io.setup(self.pin_map['sonar_trig'], io.OUT)
         io.setup(self.pin_map['sonar_echo'], io.IN)
         self.tk_vars = tk_vars
-        self.temp_reader = TempReader()
 
         self.temp_thread = Thread(target=self.check_temperature)
         self.temp_thread.start()
