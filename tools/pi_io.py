@@ -1,8 +1,8 @@
 # from RPi import GPIO # For debuggin on non-raspbian system
 import time
-from temp_reader import TempReader
+from tools.temp_reader import TempReader
 from threading import Thread
-from heater_controller import HeaterController
+from tools.heater_controller import HeaterController
 
 # This is the GPIO Controller Class
 class PiIo:
