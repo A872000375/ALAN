@@ -45,7 +45,6 @@ CONVERSION_FACTORS = {
 }
 
 drive_service = None
-controller = Control()
 
 
 def login_redirect_google():
