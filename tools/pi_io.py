@@ -56,14 +56,14 @@ class PiIo:
                 print('Could not convert target temp')
                 return
 
-            if int(current_temp) % 2 == 0:
-                print(current_temp)
+
+            print(current_temp)
 
             temp_needed = target_temp - current_temp
-            if temp_needed > 2.0:
+            if temp_needed > 0.5:
                 # Turn on the heater
                 self.heat_control.heater_toggle(True)
-            elif temp_needed < -2.0:
+            elif temp_needed < -0.5:
                 # Turn off the heater
                 self.heat_control.heater_toggle(False)
 
