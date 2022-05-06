@@ -25,13 +25,15 @@ class TempReader:
         lines = self.read_temp_raw()
         while lines[0].strip()[-3:] != 'YES':
             time.sleep
-        # NO SPACES IN DTOVERLAY, YOU NEED TO CHANGE IT FOR IT TO BE FIXED(0.2)
+            # NO SPACES IN DTOVERLAY, YOU NEED TO CHANGE IT FOR IT TO BE FIXED(0.2)
             lines = self.read_temp_raw()
         equals_pos = lines[1].find('t=')
         if equals_pos != -1:
             temp_string = lines[1][equals_pos + 2:]
             temp_c = float(temp_string) / 1000.0
             temp_f = temp_c * 9.0 / 5.0 + 32.0
+            if temp_f >= 185.0:
+                return self.read_temp()  # try again if there is an error reading the temp
             return temp_c, temp_f
 
 
