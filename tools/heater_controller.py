@@ -28,7 +28,9 @@ class HeaterController:
         print(f'Heater was changed from {previous} to {self.get_heater_status_readable()}')
 
     def get_heater_status_readable(self):
-        return convert(self.get_raw_heater_status())
+        status = self.get_raw_heater_status()
+        print(status)
+        return convert(status)
 
     def get_raw_heater_status(self):
         return GPIO.input(self.HEATER_PIN)
