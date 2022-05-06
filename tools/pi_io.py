@@ -1,4 +1,4 @@
-# from RPi import GPIO # For debuggin on non-raspbian system
+from RPi import GPIO as io
 
 import time
 from tools.temp_reader import TempReader
