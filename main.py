@@ -23,6 +23,9 @@ from RPi import GPIO
 
 
 DEBUG_MODE = False
+GOOGLE_DRIVE_ENABLED =  False
+
+
 google_drive_connected = False
 FREQ_KEY = 'food_freq_var'
 AMT_KEY = 'food_amt_var'
@@ -132,7 +135,11 @@ def save_changes_button():
 
 
 def sync_json_to_google_drive():
-    global drive_service, json_config, JSON_FILE_NAME
+    global drive_service, json_config, JSON_FILE_NAME, GOOGLE_DRIVE_ENABLED
+    if not GOOGLE_DRIVE_ENABLED:
+        print('Google Drive interface is disabled.')
+        return
+
     if drive_service is None or not google_drive_connected:
         print('Google Cloud syncing is offline. \nPlease relaunch the app to retry, or continue using in Offline Mode.')
 
