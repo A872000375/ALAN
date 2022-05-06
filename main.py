@@ -285,12 +285,7 @@ save_changes_btn = ttk.Button(frame, text='Save Changes', command=save_changes_b
 save_changes_btn.grid(row=100, column=1, columnspan=4, sticky=tk.W)
 
 
-#
-def test_heater():
-    global controller
-    controller.heater_toggle(True)
-    sleep(60)
-    controller.heater_toggle(False)
+
 
 
 def test_pixel_strip():
@@ -308,8 +303,6 @@ tkvars = {
     'temp': tank_temp_var
 }
 piio = PiIo(tkvars)
-test_heater()
-test_pixel_strip()
 # Start Program
 root.mainloop()
 save_json_config()
