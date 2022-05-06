@@ -1,7 +1,7 @@
 import RPi.GPIO as GPIO
 
 
-def convert(self, status):
+def convert(status):
     if status == 1:
         return 'HIGH'
     else:
