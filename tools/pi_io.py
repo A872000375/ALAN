@@ -4,6 +4,7 @@ import time
 from tools.temp_reader import TempReader
 from threading import Thread
 from tools.heater_controller import HeaterController
+from time import sleep
 
 
 # This is the GPIO Controller Class
@@ -11,6 +12,7 @@ class PiIo:
 
     # passthrough tkinter variables for the thread to check
     def __init__(self, tk_vars: dict):
+        self.kill_thread = False
         io.setmode(io.BOARD)
         self.heat_control = HeaterController()
         self.temp_reader = TempReader()
@@ -30,10 +32,15 @@ class PiIo:
         self.temp_thread = Thread(target=self.check_temperature)
         self.temp_thread.start()
 
+    def kill_threads(self):
+        self.kill_thread = True
+
     # This is the PID loop for the temp and heater elements.
     # If the heat is too low, the heater is turned on, and if too high, turned off
     def check_temperature(self):
         while True:
+            if self.kill_thread:
+                break
             current_temp = self.get_temp_f()
             target_temp = self.tk_vars['temp'].get()
 
@@ -49,7 +56,7 @@ class PiIo:
                 print('Could not convert target temp')
                 return
 
-            if int(current_temp) % 5 == 0:
+            if int(current_temp) % 2 == 0:
                 print(current_temp)
 
             temp_needed = target_temp - current_temp
@@ -60,14 +67,23 @@ class PiIo:
                 # Turn off the heater
                 self.heat_control.heater_toggle(False)
 
+            sleep(1)
+        print('Temperature manager daemon has been terminated.')
+
     def get_temp_f(self):
-        return self.temp_reader.read_temp()[1]
+        try:
+            return self.temp_reader.read_temp()[1]
+        except IndexError as e:
+            return 10000  # this will trigger the heater to shut off if there is an error
 
     def get_temp_c(self):
-        return self.temp_reader.read_temp()[0]
+        try:
+            return self.temp_reader.read_temp()[1]
+        except IndexError as e:
+            return 10000  # this will trigger the heater to shut off if there is an error
 
     def get_all_temps(self):
-        return self.temp_reader.read_temp()
+        return self.get_temp_f(), self.get_temp_c()
 
     def read_sonar_ping(self):
         io.output(self.pin_map['sonar_trig'], io.LOW)

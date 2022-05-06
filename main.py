@@ -318,6 +318,7 @@ tkvars = {
 piio = PiIo(tkvars)
 # Start Program
 root.mainloop()
+piio.kill_threads()
 save_json_config()
 upload_localcopy_to_google_drive()
 
