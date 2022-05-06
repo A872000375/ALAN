@@ -40,6 +40,7 @@ class PiIo:
     def check_temperature(self):
         while True:
             if self.kill_thread:
+                self.heat_control.heater_toggle(False)  # Turn off heater when exiting
                 break
             current_temp = self.get_temp_f()
             target_temp = self.tk_vars['temp'].get()
