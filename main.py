@@ -150,9 +150,14 @@ def sync_json_to_google_drive():
         drivecopy = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
         return
 
+
+
     for drivecopy in items:
         drivecopy_lastmod = drivecopy.get('lastModified')
         drivecopy_id = drivecopy.get('id')
+
+        if drivecopy is None or drivecopy_lastmod is None or drivecopy_id is None:
+            continue
 
         print(type(drivecopy_lastmod))
         print('Google Drive version was last modified:', drivecopy_lastmod)
