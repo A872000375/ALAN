@@ -21,10 +21,8 @@ from googleapiclient.http import MediaIoBaseDownload
 from tools.pi_io import PiIo
 from RPi import GPIO
 
-
 DEBUG_MODE = False
-GOOGLE_DRIVE_ENABLED =  False
-
+GOOGLE_DRIVE_ENABLED = False
 
 google_drive_connected = False
 FREQ_KEY = 'food_freq_var'
@@ -118,6 +116,8 @@ food_amt_var = tk.StringVar()
 tank_temp_var = tk.DoubleVar()
 # Tank Temperature Label
 temp_str = tk.StringVar()
+# Feeder Level Var
+feeder_level_var = tk.StringVar()
 
 
 # When save_changes_btn is clicked, save current settings and make changes to PID process.
@@ -157,8 +157,6 @@ def sync_json_to_google_drive():
         file_media = MediaFileUpload('smart_tank_config.json', mimetype=JSON_MIME)
         drivecopy = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
         return
-
-
 
     for drivecopy in items:
         drivecopy_lastmod = drivecopy.get('lastModified')
@@ -297,8 +295,12 @@ tank_temp_scl.grid(row=4, column=3, sticky=tk.W)
 save_changes_btn = ttk.Button(frame, text='Save Changes', command=save_changes_button, width=50)
 save_changes_btn.grid(row=100, column=1, columnspan=4, sticky=tk.W)
 
-
-
+# Feeder Level Label
+feed_level_lbl = ttk.Label(frame, text='Feed Remaining:', padding=LABEL_PADDING, justify=tk.RIGHT)
+feed_level_lbl.grid(row=5, column=1, sticky=tk.E)
+# Formatted Feeder Level Label
+level_lbl = ttk.Label(frame, textvariable=feeder_level_var, padding=LABEL_PADDING, justify=tk.LEFT)
+level_lbl.grid(row=5, column=2, sticky=tk.E)
 
 
 def test_pixel_strip():
@@ -313,7 +315,8 @@ def test_pixel_strip():
 tkvars = {
     'freq': food_freq_var,
     'amt': food_amt_var,
-    'temp': tank_temp_var
+    'temp': tank_temp_var,
+    'level': feeder_level_var
 }
 piio = PiIo(tkvars)
 # Start Program

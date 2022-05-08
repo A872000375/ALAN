@@ -37,5 +37,5 @@ class TempReader:
             return temp_c, temp_f
 
 
-temp_reader = TempReader()
+temp_reader = TempReader()  
 print(temp_reader.read_temp())
