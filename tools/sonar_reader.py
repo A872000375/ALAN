@@ -37,7 +37,7 @@ class SonarReader:
 
         duration = end_time - start_time
 
-        distance = round(duration * 17150, 2)  # will be centimeters
+        distance = round(duration * 17150, 1)  # will be centimeters
         if self.DEBUG_MODE:
             print('Food Distance:', distance)
 
