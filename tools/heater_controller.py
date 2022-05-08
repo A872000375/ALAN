@@ -33,4 +33,6 @@ class HeaterController:
         return convert(status)
 
     def get_raw_heater_status(self):
-        return GPIO.input(self.HEATER_PIN)
+        GPIO.setmode(GPIO.BOARD)
+        value = GPIO.input(self.HEATER_PIN)
+        return value

@@ -6,6 +6,7 @@ class SonarReader:
 
     def __init__(self):
         # Sonar reader cables from LEFT to RIGHT (in the module itself):purple, blue, green, yellow
+        self.DEBUG_MODE = False
         IO.setmode(IO.BOARD)
         self.EMPTY_DISTANCE = 6.25
         self.FULL_DISTANCE = 1
