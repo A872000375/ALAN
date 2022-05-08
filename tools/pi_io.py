@@ -48,7 +48,7 @@ class PiIo:
             # In the case that the tank is
             if current_level_value > 1.00:
                 self.tk_vars['level'].set(
-                    'The feeder tank is either currently open,\nor has been overfilled. Please check the feeder.')
+                    'The feeder tank is either currently open,\nor has been overfilled. \nPlease check the feeder.')
                 continue
 
             if self.previous_feeder_level is None:

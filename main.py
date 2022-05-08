@@ -31,7 +31,9 @@ TEMP_KEY = 'tank_temp_var'
 
 WINDOW_WIDTH = 550
 WINDOW_HEIGHT = 500
-WINDOW_GEOMETRY = str(WINDOW_WIDTH) + 'x' + str(WINDOW_HEIGHT)
+POS_X = 10
+POS_Y = 10
+WINDOW_GEOMETRY = f'{str(WINDOW_WIDTH)}x{str(WINDOW_HEIGHT)}+{str(POS_X)}+{str(POS_Y)}'
 LABEL_PADDING = (20, 5)
 JSON_FILE_NAME = 'smart_tank_config.json'
 json_config = None
@@ -103,6 +105,7 @@ root = tk.Tk()
 root.title('Smart Fish Tank Control')
 root.geometry(WINDOW_GEOMETRY)
 root.resizable(False, False)
+
 frame = ttk.Frame(root, height=575, width=375, borderwidth=10)
 frame.grid(row=1, column=1)
 
