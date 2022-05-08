@@ -53,5 +53,5 @@ class SonarReader:
         return self.read_sonar_ping() / self.EMPTY_DISTANCE
 
     def get_feed_tank_level_formatted(self):
-        feed_level = self.get_feed_tank_level()
+        feed_level = self.get_feed_tank_level() * 100
         return f'{feed_level:0.0f}%'
