@@ -34,6 +34,9 @@ class PiIo:
         self.temp_thread = Thread(target=self.check_temperature)
         self.temp_thread.start()
 
+        self.feeder_level_thread = Thread(target=self.update_feeder_level)
+        self.feeder_level_thread.start()
+
     def update_feeder_level(self):
         while True:
             if self.kill_thread:
