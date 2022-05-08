@@ -8,7 +8,7 @@ class SonarReader:
         # Sonar reader cables from LEFT to RIGHT (in the module itself):purple, blue, green, yellow
         self.DEBUG_MODE = True
         IO.setmode(IO.BOARD)
-        self.EMPTY_DISTANCE = 6.25
+        self.EMPTY_DISTANCE = 5.2
         self.FULL_DISTANCE = 1
         self.pin_map = {
             'sonar_trig': 10,  # RED CABLE
@@ -54,4 +54,6 @@ class SonarReader:
 
     def get_feed_tank_level_formatted(self):
         feed_level = self.get_feed_tank_level() * 100
+        feed_level = min(100, feed_level)   # Limits the label to 0%-->100%
+        feed_level = max(0, feed_level)
         return f'{feed_level:0.0f}%'
