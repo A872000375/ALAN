@@ -12,7 +12,7 @@ class SonarReader:
         self.FULL_DISTANCE = 1
         self.pin_map = {
             'sonar_trig': 10,  # RED CABLE
-            'sonar_echo': 11,   # ORANGE CABLE
+            'sonar_echo': 11,  # ORANGE CABLE
         }
         # TODO: Redo sonar pins for GPIO.BOARD configuration
         IO.setup(self.pin_map['sonar_trig'], IO.OUT)
@@ -50,7 +50,7 @@ class SonarReader:
         return self.read_sonar_ping() >= self.FULL_DISTANCE
 
     def get_feed_tank_level(self):
-        return self.read_sonar_ping() / self.EMPTY_DISTANCE
+        return 1 - (self.read_sonar_ping() / self.EMPTY_DISTANCE)
 
     def get_feed_tank_level_formatted(self):
         feed_level = self.get_feed_tank_level() * 100
