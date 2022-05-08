@@ -29,8 +29,8 @@ FREQ_KEY = 'food_freq_var'
 AMT_KEY = 'food_amt_var'
 TEMP_KEY = 'tank_temp_var'
 
-WINDOW_WIDTH = 400
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 550
+WINDOW_HEIGHT = 500
 WINDOW_GEOMETRY = str(WINDOW_WIDTH) + 'x' + str(WINDOW_HEIGHT)
 LABEL_PADDING = (20, 5)
 JSON_FILE_NAME = 'smart_tank_config.json'
