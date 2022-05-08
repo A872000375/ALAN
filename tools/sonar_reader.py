@@ -8,8 +8,8 @@ class SonarReader:
         # Sonar reader cables from LEFT to RIGHT (in the module itself):purple, blue, green, yellow
         self.DEBUG_MODE = True
         IO.setmode(IO.BOARD)
-        self.EMPTY_DISTANCE = 5.2
-        self.FULL_DISTANCE = 1
+        self.EMPTY_DISTANCE = 6.3
+        self.FULL_DISTANCE = 0.5
         self.pin_map = {
             'sonar_trig': 10,  # RED CABLE
             'sonar_echo': 11,  # ORANGE CABLE
