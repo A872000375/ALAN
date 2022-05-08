@@ -56,7 +56,7 @@ class PiIo:
                 self.previous_feeder_level = current_level_value
             else:
                 level_delta = current_level_value - self.previous_feeder_level
-                if level_delta >= 0.01:
+                if abs(level_delta) >= 0.01:
                     self.tk_vars['level'].set(level_formatted)
                     self.previous_feeder_level = current_level_value
 
