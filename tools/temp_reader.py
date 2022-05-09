@@ -34,6 +34,7 @@ class TempReader:
             temp_f = temp_c * 9.0 / 5.0 + 32.0
             if temp_f >= 185.0:
                 print(temp_f, temp_c)
+                print('Error reading temperatures. Check your pins.')
                 return self.read_temp()  # try again if there is an error reading the temp
             return temp_c, temp_f
 
