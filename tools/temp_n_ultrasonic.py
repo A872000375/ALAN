@@ -3,8 +3,8 @@ import time
 import os
 import glob
  
-#GPIO Mode (BOARD / BCM)
-GPIO.setmode(GPIO.BCM)
+# #GPIO Mode (BOARD / BCM)
+# GPIO.setmode(GPIO.BCM)
  
 #set GPIO Pins
 GPIO_TRIGGER = 8
