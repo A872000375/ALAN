@@ -315,13 +315,13 @@ def test_pixel_strip():
         print('Could not start up RGB Controller.')
 
 
-tkvars = {
+tk_vars = {
     'freq': food_freq_var,
     'amt': food_amt_var,
     'temp': tank_temp_var,
     'level': feeder_level_var
 }
-piio = PiIo(tkvars)
+piio = PiIo(tk_vars)
 # Start Program
 root.mainloop()
 piio.kill_threads()

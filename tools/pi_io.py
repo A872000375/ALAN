@@ -6,6 +6,7 @@ from tools.sonar_reader import SonarReader
 from threading import Thread
 from tools.heater_controller import HeaterController
 from time import sleep
+from tools.servo_controller import FeederScheduler, ServoController
 
 
 # This is the GPIO Controller Class
@@ -37,6 +38,9 @@ class PiIo:
         self.feeder_level_thread = Thread(target=self.update_feeder_level)
         self.feeder_level_thread.start()
 
+        self.servo = ServoController()
+        self.feeder_scheduler = FeederScheduler(self.servo, self.tk_vars)  # Starts on its own
+
     def update_feeder_level(self):
         while True:
             if self.kill_thread:
@@ -60,10 +64,13 @@ class PiIo:
                     self.tk_vars['level'].set(level_formatted)
                     self.previous_feeder_level = current_level_value
 
+            sleep(4)  # total 5 seconds between the sensor reading (takes 1 second) and this thread
+
         print('Feeder level monitor daemon has been terminated.')
 
     def kill_threads(self):
         self.kill_thread = True
+        self.feeder_scheduler.stop_threads()
 
     # This is the PID loop for the temp and heater elements.
     # If the heat is too low, the heater is turned on, and if too high, turned off
