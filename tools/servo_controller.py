@@ -6,7 +6,7 @@ from threading import Thread
 
 class ServoController:
 
-    def __init__(self, starting_angle=0, max_angle=90, servo_channel=16):
+    def __init__(self, starting_angle=0, max_angle=90, servo_channel=0):
         self.SERVO_CHANNEL = servo_channel
         self.MAX_ANGLE = max_angle
         self.OPEN_POSITION = 30
