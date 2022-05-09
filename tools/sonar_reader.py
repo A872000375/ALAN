@@ -1,4 +1,4 @@
-from RPiTestingOnly import GPIO as IO
+from RPi import GPIO as IO
 import time
 
 

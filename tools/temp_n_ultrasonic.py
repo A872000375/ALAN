@@ -1,4 +1,4 @@
-import RPiTestingOnly.GPIO as GPIO
+from RPi import GPIO
 import time
 import os
 import glob

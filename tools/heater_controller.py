@@ -1,4 +1,4 @@
-import RPiTestingOnly.GPIO as GPIO
+import RPi.GPIO as GPIO
 
 
 def convert(status):
