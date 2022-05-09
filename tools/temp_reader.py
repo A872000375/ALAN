@@ -33,6 +33,7 @@ class TempReader:
             temp_c = float(temp_string) / 1000.0
             temp_f = temp_c * 9.0 / 5.0 + 32.0
             if temp_f >= 185.0:
+                print(temp_f, temp_c)
                 return self.read_temp()  # try again if there is an error reading the temp
             return temp_c, temp_f
 
