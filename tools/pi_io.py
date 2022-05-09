@@ -16,7 +16,7 @@ class PiIo:
     def __init__(self, tk_vars: dict):
         self.kill_thread = False
         self.previous_feeder_level = None
-        IO.setmode(IO.BOARD)
+        # IO.setmode(IO.BOARD)
         self.heat_control = HeaterController()
         self.temp_reader = TempReader()
         self.sonar_reader = SonarReader()
