@@ -9,6 +9,7 @@ from datetime import datetime
 from time import sleep
 
 # Google Api Imports
+import google.auth.exceptions
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -51,6 +52,10 @@ CONVERSION_FACTORS = {
 
 drive_service = None
 
+def restart_app():
+    os.system('sudo chmod +x ~/Desktop/SmartFishTank/restart.sh')
+    os.system('~/Desktop/SmartFishTank/restart.sh')
+    quit()
 
 def login_redirect_google():
     global drive_service, DEBUG_MODE
@@ -63,7 +68,15 @@ def login_redirect_google():
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
+            try:
+                creds.refresh(Request())
+            except google.auth.exceptions.RefreshError as e:
+                # If you encounter the refresh error, the program will prompt you to login again
+                print(e)
+                print('Could not log into google cloud. Please restart the application and log in again.')
+                os.system('rm ~/Desktop/SmartFishTank/token.json')
+                restart_app()
+
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
                 'credentials.json', SCOPES)
