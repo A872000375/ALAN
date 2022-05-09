@@ -1,4 +1,4 @@
-from RPi import GPIO as IO
+from RPiTestingOnly import GPIO as IO
 import time
 
 
@@ -7,7 +7,7 @@ class SonarReader:
     def __init__(self):
         # Sonar reader cables from LEFT to RIGHT (in the module itself):purple, blue, green, yellow
         self.DEBUG_MODE = True
-        IO.setmode(IO.BOARD)
+        # IO.setmode(IO.BOARD)
         self.EMPTY_DISTANCE = 6.3
         self.FULL_DISTANCE = 0.5
         self.pin_map = {

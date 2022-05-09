@@ -20,7 +20,7 @@ from googleapiclient.http import MediaIoBaseDownload
 
 # GPIO Controller Class
 from tools.pi_io import PiIo
-from RPi import GPIO
+from RPiTestingOnly import GPIO
 
 DEBUG_MODE = False
 GOOGLE_DRIVE_ENABLED = False
