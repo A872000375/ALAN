@@ -44,6 +44,8 @@ def hours_to_seconds(num_hours):
 class FeederScheduler:
 
     def __init__(self, servo_control: ServoController, tk_vars: dict):
+        self.DEFAULT_INTERVAL = 24
+        self.DEFAULT_FOOD_AMOUNT = 10
         self.tk_vars = tk_vars
         self.servo = servo_control
         self.feed_interval = self.tk_vars['freq']
@@ -58,6 +60,10 @@ class FeederScheduler:
             if self.stop_thread:
                 break
             self.servo.operate_feeder(self.food_units.get())
+            print('Operating servo...')
+            print(
+                f'Next feed in {self.get_food_frequency()} hours, '
+                f'or {hours_to_seconds(self.get_food_frequency())} seconds.')
             sleep(hours_to_seconds(self.feed_interval.get()))
 
         self.stop_thread = False
@@ -66,4 +72,14 @@ class FeederScheduler:
         self.stop_thread = True
         print('Terminating FeederScheduler daemon.')
 
+    def get_food_frequency(self):
+        try:
+            return int(self.feed_interval.get())
+        except ValueError as e:
+            return self.DEFAULT_INTERVAL
 
+    def get_food_amount(self):
+        try:
+            return int(self.food_units.get())
+        except ValueError as e:
+            return self.DEFAULT_FOOD_AMOUNT

@@ -265,13 +265,27 @@ def update_temp_label(value):
 
 load_json_config()
 update_temp_label(None)
+
+
+# This validation method makes sure that users can only enter integers
+# Must be before the Entry initialization
+def validate_numerical_entry(value):
+    if str.isdigit(value) or value == '':
+        return True
+    else:
+        return False
+
+
+validation_cmd = (root.register(validate_numerical_entry))
+
 # FOOD FREQUENCY
 
 # Food Frequency Label
 food_freq_lbl = ttk.Label(frame, text="Food Frequency (# Hours):", padding=LABEL_PADDING, justify=tk.RIGHT)
 food_freq_lbl.grid(row=2, column=1, sticky=tk.E)
 # Food Frequency Entry
-food_freq_ent = ttk.Entry(frame, width=10, textvariable=food_freq_var)
+food_freq_ent = ttk.Entry(frame, width=10, textvariable=food_freq_var, validate='all',
+                          validatecommand=(validation_cmd, '%P'))
 food_freq_ent.grid(row=2, column=2, columnspan=2, sticky=tk.W)
 
 # FOOD AMOUNT
@@ -280,7 +294,8 @@ food_freq_ent.grid(row=2, column=2, columnspan=2, sticky=tk.W)
 food_amt_lbl = ttk.Label(frame, text='Food Amount (# Units):', padding=LABEL_PADDING, justify=tk.RIGHT)
 food_amt_lbl.grid(row=3, column=1, sticky=tk.E)
 # Food Amount Entry
-food_amt_ent = ttk.Entry(frame, width=4, textvariable=food_amt_var)
+food_amt_ent = ttk.Entry(frame, width=4, textvariable=food_amt_var, validate='all',
+                         validatecommand=(validation_cmd, '%P'))
 food_amt_ent.grid(row=3, column=2, columnspan=2, sticky=tk.W)
 
 # TANK TEMPERATURE
