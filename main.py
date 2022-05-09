@@ -38,8 +38,8 @@ LABEL_PADDING = (20, 5)
 JSON_FILE_NAME = 'smart_tank_config.json'
 json_config = None
 JSON_FILE_DEFAULTS = {
-    FREQ_KEY: '12',
-    AMT_KEY: '1',
+    FREQ_KEY: '24',
+    AMT_KEY: '10',
     TEMP_KEY: 70.0
 }
 SCOPES = ['https://www.googleapis.com/auth/drive']
