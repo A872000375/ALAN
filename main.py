@@ -21,6 +21,7 @@ from googleapiclient.http import MediaIoBaseDownload
 # GPIO Controller Class
 from tools.pi_io import PiIo
 from RPi import GPIO
+
 # GPIO.setmode(GPIO.BOARD)
 DEBUG_MODE = False
 GOOGLE_DRIVE_ENABLED = False
@@ -52,10 +53,12 @@ CONVERSION_FACTORS = {
 
 drive_service = None
 
+
 def restart_app():
     os.system('sudo chmod +x ~/Desktop/SmartFishTank/restart.sh')
     os.system('~/Desktop/SmartFishTank/restart.sh')
     quit()
+
 
 def login_redirect_google():
     global drive_service, DEBUG_MODE
@@ -106,7 +109,8 @@ def login_redirect_google():
         print(f'An error occurred: {error}')
 
 
-login_redirect_google()
+if GOOGLE_DRIVE_ENABLED:
+    login_redirect_google()
 
 JSON_MIME = 'application/json'
 # file_metadata = {'name': 'smart_tank_config.json'}
