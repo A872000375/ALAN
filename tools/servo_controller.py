@@ -22,7 +22,7 @@ class ServoController:
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
         GPIO.setup(self.SERVO_PIN, GPIO.OUT)
-        self.servo = GPIO.pwm(self.SERVO_PIN, 50)
+        self.servo = GPIO.PWM(self.SERVO_PIN, 50)
         self.servo.start(0)  # Start up the servo, but don't move it yet
         self.current_angle = starting_angle
         self.set_angle(self.current_angle)
