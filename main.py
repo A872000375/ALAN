@@ -201,7 +201,9 @@ def sync_json_to_google_drive():
 
 
 def upload_localcopy_to_google_drive():
-    global JSON_FILE_NAME
+    global JSON_FILE_NAME, GOOGLE_DRIVE_ENABLED
+    if not GOOGLE_DRIVE_ENABLED:
+        return
     file_metadata = {'name': JSON_FILE_NAME}
     file_media = MediaFileUpload(JSON_FILE_NAME, mimetype=JSON_MIME)
     drivecopy = drive_service.files().create(body=file_metadata, media_body=file_media, fields='id').execute()
@@ -209,7 +211,9 @@ def upload_localcopy_to_google_drive():
 
 
 def replace_local_with_remote_json(drivecopy_id):
-    global drive_service
+    global drive_service, GOOGLE_DRIVE_ENABLED
+    if not GOOGLE_DRIVE_ENABLED:
+        return
     # this means that the local copy is older
     os.remove(JSON_FILE_NAME)  # delete local copy
     # Start download process
