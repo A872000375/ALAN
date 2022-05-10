@@ -8,46 +8,57 @@ import busio
 # Import the PCA9685 module.
 from adafruit_pca9685 import PCA9685
 from adafruit_motor.servo import Servo
+from RPIO import PWM
 
 
 class ServoController:
 
     def __init__(self, starting_angle=0, max_angle=90, servo_channel=0):
-        # Create the I2C bus interface.
-        self.i2c_bus = busio.I2C(SCL, SDA)
-
-        # Create a simple PCA9685 class instance.
-        self.pca = PCA9685(self.i2c_bus)
-
+        self.servo = PWM.Servo()
+        self.SERVO_PIN = 27
         self.SERVO_CHANNEL = servo_channel
         self.MAX_ANGLE = max_angle
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
-        self.kit = ServoKit(channels=16)
-        self.servo = Servo(self.SERVO_CHANNEL)
-        self.kit.servo[self.SERVO_CHANNEL].actuation_range = self.MAX_ANGLE
-        self.set_angle(starting_angle)
-        self.current_angle = starting_angle
+        # self.kit = ServoKit(channels=16)
+        # self.servo = Servo(self.SERVO_CHANNEL)
+        # self.kit.servo[self.SERVO_CHANNEL].actuation_range = self.MAX_ANGLE
+        # self.set_angle(starting_angle)
+        # self.current_angle = starting_angle
+        sleep(10)
+        print('Setting to 1200')
+        self.set_servo(1200)
+        sleep(3)
+        print('Setting to 2000')
+        self.set_servo(2000)
+        sleep(3)
+        self.stop_servo()
 
-    def set_angle(self, angle: int):
-        self.kit.servo[self.SERVO_CHANNEL].angle = angle
-        self.current_angle = 0
+    def set_servo(self, time: int):
+        self.servo.set_servo(self.SERVO_PIN, time)
 
-    def get_current_angle(self):
-        return self.current_angle
+    def stop_servo(self):
+        self.servo.stop_servo(self.SERVO_PIN)
 
-    def operate_feeder(self, units_of_food: int):
-        # Each unit of food corresponds to 0.1 second of food dispensing
-        operation_time_sec = units_of_food * 0.1
-        self.open_feeder()
-        sleep(operation_time_sec)
-        self.close_feeder()
-
-    def open_feeder(self):
-        self.set_angle(self.OPEN_POSITION)
-
-    def close_feeder(self):
-        self.set_angle(self.CLOSE_POSITION)
+    # def set_angle(self, angle: int):
+    #     self.kit.servo[self.SERVO_CHANNEL].angle = angle
+    #     self.current_angle = 0
+    #
+    # def get_current_angle(self):
+    #     return self.current_angle
+    #
+    # def operate_feeder(self, units_of_food: int):
+    #     # Each unit of food corresponds to 0.1 second of food dispensing
+    #     operation_time_sec = units_of_food * 0.1
+    #     self.open_feeder()
+    #     sleep(operation_time_sec)
+    #     self.close_feeder()
+    #
+    # def open_feeder(self):
+    #     self.set_angle(self.OPEN_POSITION)
+    #
+    # def close_feeder(self):
+    #     self.set_angle(self.CLOSE_POSITION)
 
 
 def hours_to_seconds(num_hours):
