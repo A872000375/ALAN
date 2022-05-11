@@ -1,5 +1,5 @@
 import RPi.GPIO as GPIO
-
+from queue import Queue
 
 def convert(status):
     if status == 1:
@@ -10,12 +10,16 @@ def convert(status):
 
 class HeaterController:
 
-    def __init__(self):
-
+    def __init__(self, temp_q: Queue):
+        self.temp_q = temp_q
         # Heater setup
         self.HEATER_PIN = 36
         # GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.HEATER_PIN, GPIO.OUT)
+
+    def receive_temp(self):
+        while self.temp_q.qsize() > 0:
+
 
     # Desc: Sets the heater to on (True) or off (False)
     def heater_toggle(self, status: bool):

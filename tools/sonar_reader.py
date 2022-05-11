@@ -1,10 +1,12 @@
 from RPi import GPIO as IO
 import time
+from queue import Queue
 
 
 class SonarReader:
 
-    def __init__(self):
+    def __init__(self, food_level_q: Queue):
+        self.food_level_q = food_level_q
         # Sonar reader cables from LEFT to RIGHT (in the module itself):purple, blue, green, yellow
         self.DEBUG_MODE = True
         # IO.setmode(IO.BOARD)
@@ -54,6 +56,9 @@ class SonarReader:
 
     def get_feed_tank_level_formatted(self):
         feed_level = self.get_feed_tank_level() * 100
-        feed_level = min(100, feed_level)   # Limits the label to 0%-->100%
+        feed_level = min(100, feed_level)  # Limits the label to 0%-->100%
         feed_level = max(0, feed_level)
         return f'{feed_level:0.0f}%'
+
+    def transmit_feed_level(self):
+        self.food_level_q.put(self.get_feed_tank_level_formatted())

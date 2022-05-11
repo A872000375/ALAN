@@ -1,16 +1,16 @@
 import os
 import glob
 import time
-
+from queue import Queue
 
 class TempReader:
 
-    def __init__(self):
+    def __init__(self, temp_q: Queue):
         # os.system('sudo dtoverlay w1-gpio gpiopin=6 pullup=0')
         # os.system('sudo dtoverlay w1-gpio gpiopin=4 pullup=0')
         # os.system('modprobe w1-gpio')
         # os.system('modprobe w1-therm')
-
+        self.temp_q = temp_q
         self.base_dir = '/sys/bus/w1/devices/'
         self.device_folder = glob.glob(self.base_dir + '28*')[0]
         self.device_file = self.device_folder + '/w1_slave'

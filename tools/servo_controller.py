@@ -9,6 +9,7 @@ import busio
 from adafruit_pca9685 import PCA9685
 from adafruit_motor.servo import Servo
 import RPi.GPIO as GPIO
+from queue import Queue
 
 
 class ServoController:
@@ -69,13 +70,16 @@ def hours_to_seconds(num_hours):
 
 class FeederScheduler:
 
-    def __init__(self, servo_control: ServoController, tk_vars: dict):
+    def __init__(self, servo_control: ServoController, tk_vars: dict, food_amt_q: Queue, food_freq_q: Queue):
+        self.food_amt_q = food_amt_q
+        self.food_freq_q = food_freq_q
+        self.food_amt = 1
+        self.food_freq = 24
         self.DEFAULT_INTERVAL = 24
         self.DEFAULT_FOOD_AMOUNT = 10
         self.tk_vars = tk_vars
         self.servo = servo_control
-        self.feed_interval = self.tk_vars['freq']
-        self.food_units = self.tk_vars['amt']
+
         self.stop_thread = False
 
         self.feed_thread = Thread(target=self.feed_timer)
@@ -85,12 +89,11 @@ class FeederScheduler:
         while not self.stop_thread:
             if self.stop_thread:
                 break
-            self.servo.operate_feeder(self.food_units.get())
+            self.servo.operate_feeder(self.food_amt)
             print('Operating servo...')
-            print(
-                f'Next feed in {self.get_food_frequency()} hours, '
-                f'or {hours_to_seconds(self.get_food_frequency())} seconds.')
-            sleep(hours_to_seconds(self.feed_interval.get()))
+            print(f'Next feed in {self.food_freq} hours, '
+                  f'or {hours_to_seconds(self.food_freq)} seconds.')
+            sleep(hours_to_seconds(self.food_freq))
 
         self.stop_thread = False
 
@@ -98,14 +101,16 @@ class FeederScheduler:
         self.stop_thread = True
         print('Terminating FeederScheduler daemon.')
 
-    def get_food_frequency(self):
-        try:
-            return int(self.feed_interval.get())
-        except ValueError as e:
-            return self.DEFAULT_INTERVAL
+    def receive_food_freq(self):
+        while self.food_freq_q.qSize() > 0:
+            try:
+                self.food_freq = self.food_freq_q.get()
+            except Queue.Empty:
+                pass
 
-    def get_food_amount(self):
-        try:
-            return int(self.food_units.get())
-        except ValueError as e:
-            return self.DEFAULT_FOOD_AMOUNT
+    def receive_food_amt(self):
+        while self.food_amt_q.qSize() > 0:
+            try:
+                self.food_amt = self.food_amt_q.get()
+            except Queue.Empty:
+                pass

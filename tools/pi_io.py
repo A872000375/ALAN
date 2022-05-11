@@ -1,3 +1,5 @@
+import tkinter
+
 from RPi import GPIO as IO
 
 import time
@@ -7,18 +9,37 @@ from threading import Thread
 from tools.heater_controller import HeaterController
 from time import sleep
 from tools.servo_controller import FeederScheduler, ServoController
+from queue import Queue
+import tkinter as tk
 
 
 # This is the GPIO Controller Class
 class PiIo:
 
     # passthrough tkinter variables for the thread to check
-    def __init__(self, tk_vars: dict):
+    def __init__(self, tk_vars: dict, root: tk.Tk):
+        self.tk_vars = tk_vars
+        self.root = root
         self.kill_thread = False
         self.previous_feeder_level = None
-        self.heat_control = HeaterController()
-        self.temp_reader = TempReader()
-        self.sonar_reader = SonarReader()
+
+        # Init Queues
+        self.food_level_q = Queue()
+        self.food_amt_q = Queue()
+        self.food_freq_q = Queue()
+        self.temp_q = Queue()
+        # Put starting values into queues
+        self.food_amt_q.put(self.tk_vars['amt'].get())  # Amount
+        self.food_freq_q.put(self.tk_vars['freq'].get())  # Frequency
+        self.temp_q.put(self.tk_vars['temp'].get())  # Temp
+
+        self.heat_control = HeaterController(self.temp_q)
+        self.temp_reader = TempReader(self.temp_q)
+        self.sonar_reader = SonarReader(self.food_level_q)
+
+        # TODO: Call the receive function for temp, amt, freq to start it
+
+
         self.DEBUG_MODE = True
         self.pin_map = {
             'sonar_trig': 10,  # TrigPin
@@ -28,7 +49,6 @@ class PiIo:
         # TODO: Redo sonar pins for GPIO.BOARD configuration
         IO.setup(self.pin_map['sonar_trig'], IO.OUT)
         IO.setup(self.pin_map['sonar_echo'], IO.IN)
-        self.tk_vars = tk_vars
 
         # Temperature management threading
         self.temp_thread = Thread(target=self.check_temperature)
@@ -38,7 +58,8 @@ class PiIo:
         self.feeder_level_thread.start()
 
         self.servo = ServoController()
-        self.feeder_scheduler = FeederScheduler(self.servo, self.tk_vars)  # Starts on its own
+        self.feeder_scheduler = FeederScheduler(self.servo, self.tk_vars, self.food_amt_q,
+                                                self.food_freq_q)  # Starts on its own
 
     def update_feeder_level(self):
         while True:

@@ -7,7 +7,7 @@ import json
 from os import path
 from datetime import datetime
 from time import sleep
-
+from threaded_client import GuiPart, ThreadedClient
 # Google Api Imports
 import google.auth.exceptions
 from google.oauth2.credentials import Credentials
@@ -340,6 +340,13 @@ feed_level_lbl.grid(row=5, column=1, sticky=tk.E)
 # Formatted Feeder Level Label
 level_lbl = ttk.Label(frame, textvariable=feeder_level_var, padding=LABEL_PADDING, justify=tk.LEFT)
 level_lbl.grid(row=5, column=2, sticky=tk.E)
+
+elements = {
+    'tank_temp_scl' : tank_temp_scl,
+    'food_amt_ent' : food_amt_ent,
+    'food_freq_ent' : food_freq_ent
+}
+
 
 
 def test_pixel_strip():
