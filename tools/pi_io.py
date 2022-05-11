@@ -11,6 +11,7 @@ from time import sleep
 from tools.servo_controller import FeederScheduler, ServoController
 from queue import Queue
 import tkinter as tk
+import queue
 
 
 # This is the GPIO Controller Class
@@ -22,7 +23,8 @@ class PiIo:
         self.root = root
         self.kill_thread = False
         self.previous_feeder_level = None
-
+        self.food_level = '0%'
+        self.temp_target = tk_vars['temp'].get()
         # Init Queues
         self.food_level_q = Queue()
         self.food_amt_q = Queue()
@@ -33,12 +35,11 @@ class PiIo:
         self.food_freq_q.put(self.tk_vars['freq'].get())  # Frequency
         self.temp_q.put(self.tk_vars['temp'].get())  # Temp
 
-        self.heat_control = HeaterController(self.temp_q)
+        self.heat_control = HeaterController()
         self.temp_reader = TempReader(self.temp_q)
         self.sonar_reader = SonarReader(self.food_level_q)
 
         # TODO: Call the receive function for temp, amt, freq to start it
-
 
         self.DEBUG_MODE = True
         self.pin_map = {
@@ -61,36 +62,60 @@ class PiIo:
         self.feeder_scheduler = FeederScheduler(self.servo, self.tk_vars, self.food_amt_q,
                                                 self.food_freq_q)  # Starts on its own
 
+    def periodic_queue_check(self):
+        # Do all of our receiving calls here
+        self.feeder_scheduler.receive_food_freq()
+        self.feeder_scheduler.receive_food_amt()
+        self.receive_temp_target()
+        self.receive_food_level()
+        if self.kill_thread:
+            return
+        else:
+            self.root.after(200, self.periodic_queue_check())
+
+
     def update_feeder_level(self):
-        while True:
-            if self.kill_thread:
-                break
+        level_formatted = self.food_level
+        current_level_value = int(level_formatted[:-1]) / 100.00
 
-            level_formatted = self.sonar_reader.get_feed_tank_level_formatted()
-            current_level_value = self.sonar_reader.get_feed_tank_level()
+        # In the case that the tank is
+        if current_level_value > 1.00:
+            self.tk_vars['level'].set(
+                'The feeder tank is either currently open,\nor has been overfilled. \nPlease check the feeder.')
+            return
 
-            # In the case that the tank is
-            if current_level_value > 1.00:
-                self.tk_vars['level'].set(
-                    'The feeder tank is either currently open,\nor has been overfilled. \nPlease check the feeder.')
-                continue
-
-            if self.previous_feeder_level is None:
+        if self.previous_feeder_level is None:
+            self.tk_vars['level'].set(level_formatted)
+            self.previous_feeder_level = current_level_value
+        else:
+            level_delta = current_level_value - self.previous_feeder_level
+            if abs(level_delta) >= 0.01:
                 self.tk_vars['level'].set(level_formatted)
                 self.previous_feeder_level = current_level_value
-            else:
-                level_delta = current_level_value - self.previous_feeder_level
-                if abs(level_delta) >= 0.01:
-                    self.tk_vars['level'].set(level_formatted)
-                    self.previous_feeder_level = current_level_value
 
-            sleep(4)  # total 5 seconds between the sensor reading (takes 1 second) and this thread
+        sleep(4)  # total 5 seconds between the sensor reading (takes 1 second) and this thread
 
-        print('Feeder level monitor daemon has been terminated.')
+
 
     def kill_threads(self):
         self.kill_thread = True
         self.feeder_scheduler.stop_threads()
+
+    def receive_food_level(self):
+        while self.food_level_q.qsize() > 0:
+            try:
+                self.food_level = self.food_level_q.get()
+                self.update_feeder_level()
+            except queue.Empty:
+                return
+
+
+    def receive_temp_target(self):
+        while self.temp_q.qsize() > 0:
+            try:
+                self.temp_target = self.temp_q.get()
+            except queue.Empty:
+                pass
 
     # This is the PID loop for the temp and heater elements.
     # If the heat is too low, the heater is turned on, and if too high, turned off
@@ -100,7 +125,7 @@ class PiIo:
                 self.heat_control.heater_toggle(False)  # Turn off heater when exiting
                 break
             current_temp = self.get_temp_f()
-            target_temp = self.tk_vars['temp'].get()
+            target_temp = self.temp_target
 
             try:
                 current_temp = float(current_temp)

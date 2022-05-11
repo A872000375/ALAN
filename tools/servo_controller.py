@@ -10,6 +10,7 @@ from adafruit_pca9685 import PCA9685
 from adafruit_motor.servo import Servo
 import RPi.GPIO as GPIO
 from queue import Queue
+import queue
 
 
 class ServoController:
@@ -102,15 +103,15 @@ class FeederScheduler:
         print('Terminating FeederScheduler daemon.')
 
     def receive_food_freq(self):
-        while self.food_freq_q.qSize() > 0:
+        while self.food_freq_q.qsize() > 0:
             try:
                 self.food_freq = self.food_freq_q.get()
-            except Queue.Empty:
+            except queue.Empty:
                 pass
 
     def receive_food_amt(self):
-        while self.food_amt_q.qSize() > 0:
+        while self.food_amt_q.qsize() > 0:
             try:
                 self.food_amt = self.food_amt_q.get()
-            except Queue.Empty:
+            except queue.Empty:
                 pass
