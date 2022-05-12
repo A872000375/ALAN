@@ -142,7 +142,7 @@ feeder_level_var = tk.StringVar()
 
 # When save_changes_btn is clicked, save current settings and make changes to PID process.
 def save_changes_button():
-    global tank_temp_var, food_freq_var, food_amt_var
+    global tank_temp_var, food_freq_var, food_amt_var, piio
     print('Saving changes')
 
     # Debug vars
