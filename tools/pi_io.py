@@ -75,9 +75,10 @@ class PiIo:
             print('Starting queue check')
             # Do all of our transmission calls
             self.sonar_reader.transmit_feed_level()
+            print('Transmitted food level')
             self.food_freq_q.put(self.tk_vars['freq'].get())
             self.food_amt_q.put(self.tk_vars['amt'].get())
-
+            print('Transmitted food freq and amt')
             print('Receiving...')
             # Do all of our receiving calls here
             self.feeder_scheduler.receive_food_freq()
