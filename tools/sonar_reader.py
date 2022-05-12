@@ -26,7 +26,7 @@ class SonarReader:
         IO.output(self.pin_map['sonar_trig'], IO.HIGH)
         time.sleep(0.00001)
         IO.output(self.pin_map['sonar_trig'], IO.LOW)
-        print('reading ping value 0')
+        # print('reading ping value 0')
         start_time = time.time()
 
         MAX_PING_DURATION = 0.1

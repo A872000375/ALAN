@@ -89,8 +89,7 @@ class PiIo:
             print('Killing threads')
             return
         else:
-            self.root.after(1000, self.periodic_queue_check())
-        sleep(2)
+            self.root.after(2000, self.periodic_queue_check)
 
     def update_feeder_level(self):
         level_formatted = self.food_level
