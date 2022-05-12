@@ -71,7 +71,7 @@ def hours_to_seconds(num_hours):
 
 class FeederScheduler:
 
-    def __init__(self, servo_control: ServoController, tk_vars: dict, food_amt_q: Queue, food_freq_q: Queue):
+    def __init__(self, servo: ServoController, tk_vars: dict, food_amt_q: Queue, food_freq_q: Queue):
         self.food_amt_q = food_amt_q
         self.food_freq_q = food_freq_q
         self.food_amt = 1
@@ -79,7 +79,7 @@ class FeederScheduler:
         self.DEFAULT_INTERVAL = 24
         self.DEFAULT_FOOD_AMOUNT = 10
         self.tk_vars = tk_vars
-        self.servo = servo_control
+        self.servo = servo
 
         self.stop_thread = False
 

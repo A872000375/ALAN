@@ -60,11 +60,14 @@ class PiIo:
 
         self.periodic_queue_check()
         self.root_thread.start()
+        print('End of piio init')
 
     def start_mainloop(self):
+        print('Starting mainloop')
         self.root.mainloop()
 
     def periodic_queue_check(self):
+        print('Starting queue check')
         # Do all of our transmission calls
         self.sonar_reader.transmit_feed_level()
         self.food_freq_q.put(self.tk_vars['freq'].get())
@@ -80,7 +83,7 @@ class PiIo:
             print('Killing threads')
             return
         else:
-            self.root.after(500, self.periodic_queue_check())
+            self.root.after(1000, self.periodic_queue_check())
 
     def update_feeder_level(self):
         level_formatted = self.food_level
@@ -164,7 +167,7 @@ class PiIo:
 
     def get_temp_c(self):
         try:
-            return self.temp_reader.read_temp()[1]
+            return self.temp_reader.read_temp()[0]
         except IndexError as e:
             return 10000  # this will trigger the heater to shut off if there is an error
 
