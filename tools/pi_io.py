@@ -36,7 +36,7 @@ class PiIo:
         self.temp_q.put(self.tk_vars['temp'].get())  # Temp
 
         self.heat_control = HeaterController()
-        self.temp_reader = TempReader(self.temp_q)
+        self.temp_reader = TempReader()
         self.sonar_reader = SonarReader(self.food_level_q)
 
         # TODO: Call the receive function for temp, amt, freq to start it

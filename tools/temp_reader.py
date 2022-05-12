@@ -5,7 +5,7 @@ from queue import Queue
 
 class TempReader:
 
-    def __init__(self, temp_q: Queue):
+    def __init__(self:
         # os.system('sudo dtoverlay w1-gpio gpiopin=6 pullup=0')
         # os.system('sudo dtoverlay w1-gpio gpiopin=4 pullup=0')
         # os.system('modprobe w1-gpio')
