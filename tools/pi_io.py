@@ -57,8 +57,9 @@ class PiIo:
         self.feeder_scheduler = FeederScheduler(self.servo, self.tk_vars, self.food_amt_q,
                                                 self.food_freq_q)  # Starts on its own
         self.root_thread = Thread(target=self.start_mainloop())
-        self.root_thread.start()
+
         self.periodic_queue_check()
+        self.root_thread.start()
 
     def start_mainloop(self):
         self.root.mainloop()
@@ -76,6 +77,7 @@ class PiIo:
         self.receive_food_level()
         print('Updated values from queue.')
         if self.kill_thread:
+            print('Killing threads')
             return
         else:
             self.root.after(500, self.periodic_queue_check())
