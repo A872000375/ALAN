@@ -28,8 +28,9 @@ class ServoController:
         wiring.pwmSetMode(wiring.GPIO.PWM_MODE_MS)  # Set to ms stype
 
         # divide down clock
-        wiring.pwmSetClock(192)
-        wiring.pwmSetRange(2000)
+        # pulse value of 1 is fast, 75 is stop
+        wiring.pwmSetClock(384)
+        wiring.pwmSetRange(1000)
 
         GPIO.setup(self.SERVO_PIN, GPIO.OUT)
         self.servo = GPIO.PWM(self.SERVO_PIN, 50)
@@ -44,7 +45,7 @@ class ServoController:
     def test_servo(self):
         while True:
             sleep(self.SERVO_DELAY)
-            self.send_pulse(250)
+            self.send_pulse(1)
             # print('Clockwise')
             # for pulse in range(50, 250, 1):
             #     self.send_pulse(pulse)
