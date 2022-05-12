@@ -71,23 +71,25 @@ class PiIo:
         self.root.mainloop()
 
     def periodic_queue_check(self):
-        print('Starting queue check')
-        # Do all of our transmission calls
-        self.sonar_reader.transmit_feed_level()
-        self.food_freq_q.put(self.tk_vars['freq'].get())
-        self.food_amt_q.put(self.tk_vars['amt'].get())
+        while True:
+            print('Starting queue check')
+            # Do all of our transmission calls
+            self.sonar_reader.transmit_feed_level()
+            self.food_freq_q.put(self.tk_vars['freq'].get())
+            self.food_amt_q.put(self.tk_vars['amt'].get())
 
-        # Do all of our receiving calls here
-        self.feeder_scheduler.receive_food_freq()
-        self.feeder_scheduler.receive_food_amt()
-        self.receive_temp_target()
-        self.receive_food_level()
-        print('Updated values from queue.')
-        if self.kill_thread:
-            print('Killing threads')
-            return
-        else:
-            self.root.after(1000, self.periodic_queue_check())
+            # Do all of our receiving calls here
+            self.feeder_scheduler.receive_food_freq()
+            self.feeder_scheduler.receive_food_amt()
+            self.receive_temp_target()
+            self.receive_food_level()
+            print('Updated values from queue.')
+            if self.kill_thread:
+                print('Killing threads')
+                return
+            sleep(1)
+        # else:
+        #     self.root.after(1000, self.periodic_queue_check())
 
     def update_feeder_level(self):
         level_formatted = self.food_level
