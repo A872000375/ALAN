@@ -56,6 +56,8 @@ class PiIo:
         self.servo = ServoController()
         self.feeder_scheduler = FeederScheduler(self.servo, self.tk_vars, self.food_amt_q,
                                                 self.food_freq_q)  # Starts on its own
+        self.root_thread = Thread(target=root.mainloop())
+        self.root_thread.start()
         self.periodic_queue_check()
 
     def periodic_queue_check(self):

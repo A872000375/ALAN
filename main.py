@@ -366,7 +366,7 @@ tk_vars = {
 }
 piio = PiIo(tk_vars, root)
 # Start Program
-root.mainloop()
+# root.mainloop()
 piio.kill_threads()
 save_json_config()
 upload_localcopy_to_google_drive()
