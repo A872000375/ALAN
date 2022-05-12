@@ -149,7 +149,12 @@ def save_changes_button():
     print('food_freq_var:', food_freq_var.get())
     print('food_amt_var:', food_amt_var.get())
     print('tank_temp_var:', tank_temp_var.get())
+    # Put new values into queue
+    piio.temp_q.put(tank_temp_var.get())
+    piio.food_freq_q.put(food_freq_var.get())
+    piio.food_amt_q.put(food_amt_var.get())
 
+    # Save and sync
     save_json_config()
     sync_json_to_google_drive()
 
