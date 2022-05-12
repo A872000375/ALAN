@@ -103,9 +103,10 @@ class FeederScheduler:
         print('Terminating FeederScheduler daemon.')
 
     def receive_food_freq(self):
-        while self.food_freq_q.qsize() > 0:
+        while self.food_freq_q.qsize():
             try:
                 self.food_freq = self.food_freq_q.get()
+                print('Received food freq')
             except queue.Empty:
                 pass
 
@@ -113,5 +114,6 @@ class FeederScheduler:
         while self.food_amt_q.qsize() > 0:
             try:
                 self.food_amt = self.food_amt_q.get()
+                print('Received food amt')
             except queue.Empty:
                 pass
