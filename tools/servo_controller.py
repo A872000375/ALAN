@@ -26,6 +26,11 @@ class ServoController:
         GPIO.setup(self.SERVO_PIN, GPIO.OUT)
         self.servo = GPIO.PWM(self.SERVO_PIN, 50)
         self.servo.start(0)  # Start up the servo, but don't move it yet
+
+
+        # TODO: REMOVE SERVO TESTING!!!!!!
+        self.test_servo()
+
         self.current_angle = starting_angle
         self.set_angle(self.current_angle)
 
@@ -39,6 +44,7 @@ class ServoController:
             sleep(3)
             print('Testing feeder operation')
             self.operate_feeder(1)
+            sleep(3)
 
     def set_angle(self, degree):
         if degree > 180 or degree < 0:

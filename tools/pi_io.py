@@ -68,7 +68,7 @@ class PiIo:
 
 
     def periodic_queue_check(self):
-        print('-Starting queue check')
+        # print('-Starting queue check')
         # Do all of our transmission calls
         self.sonar_reader.transmit_feed_level()
         # print('Transmitted food level')
@@ -89,7 +89,7 @@ class PiIo:
 
     def update_feeder_level(self):
         level_formatted = self.food_level
-        current_level_value = int(level_formatted[:-1]) / 100.00
+        current_level_value = self.sonar_reader.get_feed_tank_level()
 
         # In the case that the tank is
         if current_level_value > 1.00:
@@ -156,9 +156,11 @@ class PiIo:
             # print('Temp Deltas:', temp_needed)
             if temp_needed > 0.5:
                 # Turn on the heater
+                print('Heater turned ON.')
                 self.heat_control.heater_toggle(True)
             elif temp_needed < -0.5:
                 # Turn off the heater
+                print('Heater turned OFF.')
                 self.heat_control.heater_toggle(False)
 
             sleep(10)
