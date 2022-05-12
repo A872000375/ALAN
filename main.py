@@ -364,7 +364,7 @@ tk_vars = {
     'temp': tank_temp_var,
     'level': feeder_level_var
 }
-piio = PiIo(tk_vars)
+piio = PiIo(tk_vars, root)
 # Start Program
 root.mainloop()
 piio.kill_threads()
