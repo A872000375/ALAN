@@ -43,14 +43,16 @@ class ServoController:
 
     def test_servo(self):
         while True:
-            print('Clockwise')
-            for pulse in range(50, 250, 1):
-                self.send_pulse(pulse)
-                sleep(self.SERVO_DELAY)
-            print('Counterclockwise')
-            for pulse in range(250, 50, -1):
-                self.send_pulse(pulse)
-                sleep(self.SERVO_DELAY)
+            sleep(self.SERVO_DELAY)
+            self.send_pulse(250)
+            # print('Clockwise')
+            # for pulse in range(50, 250, 1):
+            #     self.send_pulse(pulse)
+            #     sleep(self.SERVO_DELAY)
+            # print('Counterclockwise')
+            # for pulse in range(250, 50, -1):
+            #     self.send_pulse(pulse)
+            #     sleep(self.SERVO_DELAY)
 
     def send_pulse(self, pulse):
         wiring.pwmWrite(self.SERVO_PIN, pulse)
