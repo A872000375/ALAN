@@ -380,3 +380,4 @@ upload_localcopy_to_google_drive()
 
 # Needs to stay at bottom of code
 GPIO.cleanup()
+root.destroy()

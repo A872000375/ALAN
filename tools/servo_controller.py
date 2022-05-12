@@ -11,18 +11,20 @@ from adafruit_motor.servo import Servo
 import RPi.GPIO as GPIO
 from queue import Queue
 import queue
-
+import wiringpi
 
 class ServoController:
 
     def __init__(self, starting_angle=0):
         self.MIN_DUTY = 5
         self.MAX_DUTY = 10
-
         self.SERVO_PIN = 13  # GPIO 27
-
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
+
+        wiringpi.wiringPiSetupGpio()
+        wiringpi.pinMode(27, wiringpi.GPIO.PWM_OUTPUT)
+
         GPIO.setup(self.SERVO_PIN, GPIO.OUT)
         self.servo = GPIO.PWM(self.SERVO_PIN, 50)
         self.servo.start(0)  # Start up the servo, but don't move it yet
