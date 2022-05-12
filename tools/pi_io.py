@@ -52,7 +52,7 @@ class PiIo:
         # Temperature management threading
         self.temp_thread = Thread(target=self.check_temperature)
         self.temp_thread.start()
-
+        print('started temp thread')
         self.servo = ServoController()
         self.feeder_scheduler = FeederScheduler(self.servo, self.tk_vars, self.food_amt_q,
                                                 self.food_freq_q)  # Starts on its own
