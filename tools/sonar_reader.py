@@ -35,8 +35,9 @@ class SonarReader:
             start_time = time.time()
         print('reading ping value 1')
         while IO.input(self.pin_map['sonar_echo']) == 1:
+            # TODO: Why is this stuck on 1?
             end_time = time.time()
-
+        print('read ping value of 1')
         duration = end_time - start_time
 
         distance = round(duration * 17150, 1)  # will be centimeters
@@ -63,3 +64,4 @@ class SonarReader:
     def transmit_feed_level(self):
         print('transmitting food level')
         self.food_level_q.put(self.get_feed_tank_level_formatted())
+        print('Food level transmitted')
