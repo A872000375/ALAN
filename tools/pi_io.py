@@ -59,7 +59,7 @@ class PiIo:
         print('Started FeederScheduler')
         self.root_thread = Thread(target=self.start_mainloop())
         self.root_thread.start()
-        self.periodic_queue_check()
+        self.root.after(100, self.periodic_queue_check())
         print('started periodic queue check')
         print('End of piio init')
 
