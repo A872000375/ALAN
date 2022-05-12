@@ -71,10 +71,11 @@ class PiIo:
         self.feeder_scheduler.receive_food_amt()
         self.receive_temp_target()
         self.receive_food_level()
+        print('Updated values from queue.')
         if self.kill_thread:
             return
         else:
-            self.root.after(200, self.periodic_queue_check())
+            self.root.after(500, self.periodic_queue_check())
 
     def update_feeder_level(self):
         level_formatted = self.food_level
