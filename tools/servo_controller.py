@@ -44,7 +44,7 @@ class ServoController:
 
     def test_servo(self):
         while True:
-            pulse_val = 1
+            pulse_val = 50
             sleep(self.SERVO_DELAY)
             self.send_pulse(pulse_val)
             print(f'pulse: {self.SERVO_DELAY} delay, {pulse_val} pulse val')
