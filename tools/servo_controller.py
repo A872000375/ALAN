@@ -11,7 +11,7 @@ from adafruit_motor.servo import Servo
 import RPi.GPIO as GPIO
 from queue import Queue
 import queue
-import wiringpi
+import wiringpi as wiring
 
 class ServoController:
 
@@ -21,9 +21,14 @@ class ServoController:
         self.SERVO_PIN = 13  # GPIO 27
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
+        self.SERVO_DELAY = 0.01 # Controls the speed of the servo
+        wiring.wiringPiSetupGpio()
+        wiring.pinMode(self.SERVO_PIN, wiring.GPIO.PWM_OUTPUT)
+        wiring.pwmSetMode(wiring.GPIO.PWM_MODE_MS)  # Set to ms stype
 
-        wiringpi.wiringPiSetupGpio()
-        wiringpi.pinMode(27, wiringpi.GPIO.PWM_OUTPUT)
+        # divide down clock
+        wiring.pwmSetClock(192)
+        wiring.pwmSetRange(2000)
 
         GPIO.setup(self.SERVO_PIN, GPIO.OUT)
         self.servo = GPIO.PWM(self.SERVO_PIN, 50)
@@ -37,16 +42,17 @@ class ServoController:
         self.set_angle(self.current_angle)
 
     def test_servo(self):
-        # TODO: FIX SERVO OPERATION
         while True:
-            print('Testing servo')
-            self.open_feeder()
-            sleep(3)
-            self.close_feeder()
-            sleep(3)
-            print('Testing feeder operation')
-            self.operate_feeder(1)
-            sleep(3)
+            for pulse in range(50, 250, 1):
+                self.send_pulse(pulse)
+                sleep(self.SERVO_DELAY)
+
+            for pulse in range(250, 50 ,-1):
+                self.send_pulse(pulse)
+                sleep(self.SERVO_DELAY)
+
+    def send_pulse(self, pulse):
+        wiring.pwmWrite(self.SERVO_PIN, pulse)
 
     def set_angle(self, degree):
         if degree > 180 or degree < 0:
