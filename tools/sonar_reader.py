@@ -26,14 +26,14 @@ class SonarReader:
         IO.output(self.pin_map['sonar_trig'], IO.HIGH)
         time.sleep(0.00001)
         IO.output(self.pin_map['sonar_trig'], IO.LOW)
-        print('reading ping')
+        print('reading ping value 0')
         start_time = None
         end_time = None
 
         while IO.input(self.pin_map['sonar_echo']) == 0:
             # While input reads on
             start_time = time.time()
-
+        print('reading ping value 1')
         while IO.input(self.pin_map['sonar_echo']) == 1:
             end_time = time.time()
 
