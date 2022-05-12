@@ -32,11 +32,11 @@ class ServoController:
         self.test_servo()
 
     def test_servo(self):
-        while True:
-            self.set_angle(0)
-            sleep(3)
-            self.set_angle(90)
-            sleep(3)
+        sleep(2)
+        self.set_angle(0)
+        sleep(3)
+        self.set_angle(90)
+        sleep(3)
 
     def set_angle(self, degree):
         if degree > 180 or degree < 0:
