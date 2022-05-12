@@ -26,7 +26,7 @@ class SonarReader:
         IO.output(self.pin_map['sonar_trig'], IO.HIGH)
         time.sleep(0.00001)
         IO.output(self.pin_map['sonar_trig'], IO.LOW)
-
+        print('reading ping')
         start_time = None
         end_time = None
 
@@ -42,7 +42,7 @@ class SonarReader:
         distance = round(duration * 17150, 1)  # will be centimeters
         if self.DEBUG_MODE:
             print('Food Distance:', distance)
-
+        print('returning ping')
         return distance  # centimeters
 
     def is_empty(self):
@@ -61,4 +61,5 @@ class SonarReader:
         return f'{feed_level:0.0f}%'
 
     def transmit_feed_level(self):
+        print('transmitting food level')
         self.food_level_q.put(self.get_feed_tank_level_formatted())
