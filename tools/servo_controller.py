@@ -44,8 +44,10 @@ class ServoController:
 
     def test_servo(self):
         while True:
+            pulse_val = 1
             sleep(self.SERVO_DELAY)
-            self.send_pulse(1)
+            self.send_pulse(pulse_val)
+            print(f'pulse: {self.SERVO_DELAY} delay, {pulse_val} pulse val')
             # print('Clockwise')
             # for pulse in range(50, 250, 1):
             #     self.send_pulse(pulse)
