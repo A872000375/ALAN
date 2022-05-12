@@ -63,13 +63,9 @@ class PiIo:
         print('started periodic queue check')
         # self.root_thread = Thread(target=self.start_mainloop())
         # self.root_thread.start()
-        self.start_mainloop()
 
         print('End of piio init')
 
-    def start_mainloop(self):
-        print('Starting mainloop')
-        self.root.mainloop()
 
     def periodic_queue_check(self):
         print('-Starting queue check')

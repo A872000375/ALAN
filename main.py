@@ -335,9 +335,6 @@ temp_lbl.grid(row=4, column=2, sticky=tk.W)
 # Note: Fish usually live in water between 55F and 85F
 tank_temp_scl = ttk.Scale(frame, variable=tank_temp_var, from_=68.0, to=93.0, command=update_temp_label)
 tank_temp_scl.grid(row=4, column=3, sticky=tk.W)
-# Save Changes Button
-save_changes_btn = ttk.Button(frame, text='Save Changes', command=save_changes_button, width=50)
-save_changes_btn.grid(row=100, column=1, columnspan=4, sticky=tk.W)
 
 # Feeder Level Label
 feed_level_lbl = ttk.Label(frame, text='Feed Remaining:', padding=LABEL_PADDING, justify=tk.RIGHT)
@@ -371,7 +368,12 @@ tk_vars = {
 }
 piio = PiIo(tk_vars, root)
 # Start Program
-# root.mainloop()
+# Save Changes Button
+save_changes_btn = ttk.Button(frame, text='Save Changes', command=save_changes_button, width=50)
+save_changes_btn.grid(row=100, column=1, columnspan=4, sticky=tk.W)
+
+
+root.mainloop()
 piio.kill_threads()
 save_json_config()
 upload_localcopy_to_google_drive()
