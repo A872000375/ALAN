@@ -56,9 +56,12 @@ class PiIo:
         self.servo = ServoController()
         self.feeder_scheduler = FeederScheduler(self.servo, self.tk_vars, self.food_amt_q,
                                                 self.food_freq_q)  # Starts on its own
-        self.root_thread = Thread(target=root.mainloop())
+        self.root_thread = Thread(target=self.start_mainloop())
         self.root_thread.start()
         self.periodic_queue_check()
+
+    def start_mainloop(self):
+        self.root.mainloop()
 
     def periodic_queue_check(self):
         # Do all of our transmission calls
