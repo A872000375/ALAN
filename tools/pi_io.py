@@ -39,8 +39,6 @@ class PiIo:
         self.temp_reader = TempReader()
         self.sonar_reader = SonarReader(self.food_level_q)
 
-        # TODO: Call the receive function for temp, amt, freq to start it
-
         self.DEBUG_MODE = True
         self.pin_map = {
             'sonar_trig': 10,  # TrigPin
@@ -55,12 +53,10 @@ class PiIo:
         self.temp_thread = Thread(target=self.check_temperature)
         self.temp_thread.start()
 
-        self.feeder_level_thread = Thread(target=self.update_feeder_level)
-        self.feeder_level_thread.start()
-
         self.servo = ServoController()
         self.feeder_scheduler = FeederScheduler(self.servo, self.tk_vars, self.food_amt_q,
                                                 self.food_freq_q)  # Starts on its own
+        self.periodic_queue_check()
 
     def periodic_queue_check(self):
         # Do all of our transmission calls
@@ -96,8 +92,6 @@ class PiIo:
             if abs(level_delta) >= 0.01:
                 self.tk_vars['level'].set(level_formatted)
                 self.previous_feeder_level = current_level_value
-
-        sleep(4)  # total 5 seconds between the sensor reading (takes 1 second) and this thread
 
     def kill_threads(self):
         self.kill_thread = True
