@@ -30,6 +30,7 @@ class ServoController:
         self.set_angle(self.current_angle)
 
     def test_servo(self):
+        # TODO: FIX SERVO OPERATION
         while True:
             print('Testing servo')
             self.open_feeder()

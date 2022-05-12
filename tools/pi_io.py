@@ -57,12 +57,13 @@ class PiIo:
         self.feeder_scheduler = FeederScheduler(self.servo, self.tk_vars, self.food_amt_q,
                                                 self.food_freq_q)  # Starts on its own
         print('Started FeederScheduler')
-        self.queue_check_thread = Thread(target=self.periodic_queue_check())
-        self.queue_check_thread.start()
+        # self.queue_check_thread = Thread(target=self.periodic_queue_check())
+        # self.queue_check_thread.start()
+        self.periodic_queue_check()
         print('started periodic queue check')
-        self.root_thread = Thread(target=self.start_mainloop())
-        self.root_thread.start()
-
+        # self.root_thread = Thread(target=self.start_mainloop())
+        # self.root_thread.start()
+        self.start_mainloop()
 
         print('End of piio init')
 
@@ -71,27 +72,25 @@ class PiIo:
         self.root.mainloop()
 
     def periodic_queue_check(self):
-        while True:
-            print('-Starting queue check')
-            # Do all of our transmission calls
-            self.sonar_reader.transmit_feed_level()
-            # print('Transmitted food level')
-            self.food_freq_q.put(self.tk_vars['freq'].get())
-            self.food_amt_q.put(self.tk_vars['amt'].get())
-            # print('Transmitted food freq and amt')
-            # print('Receiving...')
-            # Do all of our receiving calls here
-            self.feeder_scheduler.receive_food_freq()
-            self.feeder_scheduler.receive_food_amt()
-            self.receive_temp_target()
-            self.receive_food_level()
-            print('Ending queue check')
-            if self.kill_thread:
-                print('Killing threads')
-                return
-            sleep(2)
-        # else:
-        #     self.root.after(1000, self.periodic_queue_check())
+        print('-Starting queue check')
+        # Do all of our transmission calls
+        self.sonar_reader.transmit_feed_level()
+        # print('Transmitted food level')
+        self.food_freq_q.put(self.tk_vars['freq'].get())
+        self.food_amt_q.put(self.tk_vars['amt'].get())
+        # print('Transmitted food freq and amt')
+        # print('Receiving...')
+        # Do all of our receiving calls here
+        self.feeder_scheduler.receive_food_freq()
+        self.feeder_scheduler.receive_food_amt()
+        self.receive_temp_target()
+        self.receive_food_level()
+        if self.kill_thread:
+            print('Killing threads')
+            return
+        else:
+            self.root.after(1000, self.periodic_queue_check())
+        sleep(2)
 
     def update_feeder_level(self):
         level_formatted = self.food_level

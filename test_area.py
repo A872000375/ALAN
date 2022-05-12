@@ -3,6 +3,8 @@ from tools.sonar_reader import SonarReader
 from tools.servo_controller import ServoController
 from queue import Queue
 from time import sleep
+
+
 myqueue = Queue
 # GPIO.setmode(GPIO.BOARD)
 # sonar = SonarReader(myqueue)
