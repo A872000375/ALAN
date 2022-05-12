@@ -37,7 +37,7 @@ class ServoController:
             self.close_feeder()
             sleep(3)
             print('Testing feeder operation')
-            self.operate_feeder()
+            self.operate_feeder(1)
 
     def set_angle(self, degree):
         if degree > 180 or degree < 0:
