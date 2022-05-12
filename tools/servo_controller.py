@@ -22,7 +22,7 @@ class ServoController:
         self.SERVO_PIN = 13  # GPIO 27
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
-        self.SERVO_DELAY = 1  # Controls the speed of the servo
+        self.SERVO_DELAY = 0.2  # Controls the speed of the servo
         wiring.wiringPiSetupGpio()
         wiring.pinMode(self.SERVO_PIN, wiring.GPIO.PWM_OUTPUT)
         wiring.pwmSetMode(wiring.GPIO.PWM_MODE_MS)  # Set to ms stype
@@ -44,7 +44,7 @@ class ServoController:
 
     def test_servo(self):
         while True:
-            pulse_val = 50
+            pulse_val = 2000
             sleep(self.SERVO_DELAY)
             self.send_pulse(pulse_val)
             print(f'pulse: {self.SERVO_DELAY} delay, {pulse_val} pulse val')
