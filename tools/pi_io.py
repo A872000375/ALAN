@@ -63,6 +63,11 @@ class PiIo:
                                                 self.food_freq_q)  # Starts on its own
 
     def periodic_queue_check(self):
+        # Do all of our transmission calls
+        self.sonar_reader.transmit_feed_level()
+        self.food_freq_q.put(self.tk_vars['freq'].get())
+        self.food_amt_q.put(self.tk_vars['amt'].get())
+
         # Do all of our receiving calls here
         self.feeder_scheduler.receive_food_freq()
         self.feeder_scheduler.receive_food_amt()
@@ -72,7 +77,6 @@ class PiIo:
             return
         else:
             self.root.after(200, self.periodic_queue_check())
-
 
     def update_feeder_level(self):
         level_formatted = self.food_level
@@ -95,8 +99,6 @@ class PiIo:
 
         sleep(4)  # total 5 seconds between the sensor reading (takes 1 second) and this thread
 
-
-
     def kill_threads(self):
         self.kill_thread = True
         self.feeder_scheduler.stop_threads()
@@ -108,7 +110,6 @@ class PiIo:
                 self.update_feeder_level()
             except queue.Empty:
                 return
-
 
     def receive_temp_target(self):
         while self.temp_q.qsize() > 0:
