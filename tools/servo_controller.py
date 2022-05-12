@@ -13,6 +13,7 @@ from queue import Queue
 import queue
 import wiringpi as wiring
 
+
 class ServoController:
 
     def __init__(self, starting_angle=0):
@@ -21,7 +22,7 @@ class ServoController:
         self.SERVO_PIN = 13  # GPIO 27
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
-        self.SERVO_DELAY = 0.01 # Controls the speed of the servo
+        self.SERVO_DELAY = 0.01  # Controls the speed of the servo
         wiring.wiringPiSetupGpio()
         wiring.pinMode(self.SERVO_PIN, wiring.GPIO.PWM_OUTPUT)
         wiring.pwmSetMode(wiring.GPIO.PWM_MODE_MS)  # Set to ms stype
@@ -34,7 +35,6 @@ class ServoController:
         self.servo = GPIO.PWM(self.SERVO_PIN, 50)
         self.servo.start(0)  # Start up the servo, but don't move it yet
 
-
         # TODO: REMOVE SERVO TESTING!!!!!!
         self.test_servo()
 
@@ -45,11 +45,11 @@ class ServoController:
         while True:
             for pulse in range(50, 250, 1):
                 self.send_pulse(pulse)
-                sleep(self.SERVO_DELAY)
+                # sleep(self.SERVO_DELAY)
 
-            for pulse in range(250, 50 ,-1):
+            for pulse in range(250, 50, -1):
                 self.send_pulse(pulse)
-                sleep(self.SERVO_DELAY)
+                # sleep(self.SERVO_DELAY)
 
     def send_pulse(self, pulse):
         wiring.pwmWrite(self.SERVO_PIN, pulse)
