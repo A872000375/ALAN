@@ -92,11 +92,25 @@ class FeederScheduler:
         while not self.stop_thread:
             if self.stop_thread:
                 break
-            self.servo.operate_feeder(self.food_amt)
+            food_amt_num = 0
+            try:
+                food_amt_num = int(self.food_amt)
+            except ValueError:
+                print('ERROR: FOOD FREQUENCY VALUE IS NOT A NUMBER')
+                sleep(5)
+                continue
+            self.servo.operate_feeder(food_amt_num)
             print('Operating servo...')
             print(f'Next feed in {self.food_freq} hours, '
                   f'or {hours_to_seconds(self.food_freq)} seconds.')
-            sleep(hours_to_seconds(self.food_freq))
+            food_freq_num = 0
+            try:
+                food_freq_num = int(self.food_freq)
+            except ValueError:
+                print('ERROR: FOOD FREQUENCY VALUE IS NOT A NUMBER')
+                sleep(5)
+                continue
+            sleep(hours_to_seconds(food_freq_num))
 
         self.stop_thread = False
 
