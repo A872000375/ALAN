@@ -8,11 +8,11 @@ import busio
 # Import the PCA9685 module.
 from adafruit_pca9685 import PCA9685
 from adafruit_motor.servo import Servo
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 from queue import Queue
 import queue
 import wiringpi as wiring
-from RPIO import PWM
+# from RPIO import PWM
 
 class ServoController:
 
