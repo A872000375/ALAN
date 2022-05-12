@@ -29,14 +29,15 @@ class ServoController:
         self.current_angle = starting_angle
         self.set_angle(self.current_angle)
 
-        self.test_servo()
-
     def test_servo(self):
-        sleep(2)
-        self.set_angle(0)
-        sleep(3)
-        self.set_angle(90)
-        sleep(3)
+        while True:
+            print('Testing servo')
+            self.open_feeder()
+            sleep(3)
+            self.close_feeder()
+            sleep(3)
+            print('Testing feeder operation')
+            self.operate_feeder()
 
     def set_angle(self, degree):
         if degree > 180 or degree < 0:
@@ -106,7 +107,7 @@ class FeederScheduler:
         while self.food_freq_q.qsize():
             try:
                 self.food_freq = self.food_freq_q.get()
-                print('Received food freq')
+                # print('Received food freq')
             except queue.Empty:
                 pass
 
@@ -114,6 +115,6 @@ class FeederScheduler:
         while self.food_amt_q.qsize() > 0:
             try:
                 self.food_amt = self.food_amt_q.get()
-                print('Received food amt')
+                # print('Received food amt')
             except queue.Empty:
                 pass

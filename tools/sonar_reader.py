@@ -29,23 +29,23 @@ class SonarReader:
         print('reading ping value 0')
         start_time = time.time()
 
-        MAX_PING_DURATION = 0.5
+        MAX_PING_DURATION = 0.1
         timeout = start_time + MAX_PING_DURATION
         while IO.input(self.pin_map['sonar_echo']) == 0 and start_time < timeout:
             # While input reads on
             start_time = time.time()
-        print('reading ping value 1')
+        # print('reading ping value 1')
         end_time = time.time()
         timeout = end_time + MAX_PING_DURATION
         while IO.input(self.pin_map['sonar_echo']) == 1 and end_time < timeout:
             end_time = time.time()
-        print('read ping value of 1')
+        # print('read ping value of 1')
         duration = end_time - start_time
 
         distance = round(duration * 17150, 1)  # will be centimeters
         if self.DEBUG_MODE:
             print('Food Distance:', distance)
-        print('returning ping')
+        # print('returning ping')
         return distance  # centimeters
 
     def is_empty(self):
@@ -64,6 +64,6 @@ class SonarReader:
         return f'{feed_level:0.0f}%'
 
     def transmit_feed_level(self):
-        print('transmitting food level')
+        # print('transmitting food level')
         self.food_level_q.put(self.get_feed_tank_level_formatted())
-        print('Food level transmitted')
+        # print('Food level transmitted')
