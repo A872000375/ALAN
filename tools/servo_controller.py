@@ -12,7 +12,7 @@ import RPi.GPIO as GPIO
 from queue import Queue
 import queue
 import wiringpi as wiring
-
+from RPIO import PWM
 
 class ServoController:
 
@@ -31,16 +31,16 @@ class ServoController:
         # pulse value of 1 is fast, 75 is stop
         wiring.pwmSetClock(384)
         wiring.pwmSetRange(1000)
-
-        GPIO.setup(self.SERVO_PIN, GPIO.OUT)
-        self.servo = GPIO.PWM(self.SERVO_PIN, 50)
-        self.servo.start(0)  # Start up the servo, but don't move it yet
+        #
+        # GPIO.setup(self.SERVO_PIN, GPIO.OUT)
+        # self.servo = GPIO.PWM(self.SERVO_PIN, 50)
+        # self.servo.start(0)  # Start up the servo, but don't move it yet
 
         # TODO: REMOVE SERVO TESTING!!!!!!
         self.test_servo()
 
-        self.current_angle = starting_angle
-        self.set_angle(self.current_angle)
+        # self.current_angle = starting_angle
+        # self.set_angle(self.current_angle)
 
     def test_servo(self):
         while True:
