@@ -115,7 +115,7 @@ class PiIo:
         self.feeder_scheduler.stop_threads()
 
     def receive_food_level(self):
-        while self.food_level_q.qsize() > 0:
+        while self.food_level_q.qsize():
             try:
                 self.food_level = self.food_level_q.get()
                 # print('Received food level')
@@ -125,10 +125,10 @@ class PiIo:
                 return
 
     def receive_temp_target(self):
-        while self.temp_q.qsize() > 0:
+        while self.temp_q.qsize():
             try:
                 self.temp_target = self.temp_q.get()
-                # print('Received temp target')
+                print(f'New Temp target: {self.temp_target}')
             except queue.Empty:
                 pass
 
@@ -156,8 +156,8 @@ class PiIo:
 
             temp_needed = target_temp - current_temp
             print('Current Temp:', current_temp)
-            print('Target Temp:', target_temp)
-            print('Temp Deltas:', temp_needed)
+            print('Received Target Temp:', target_temp)
+            # print('Temp Deltas:', temp_needed)
             if temp_needed > 0.5:
                 # Turn on the heater
                 self.heat_control.heater_toggle(True)

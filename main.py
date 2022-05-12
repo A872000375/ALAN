@@ -22,7 +22,7 @@ from googleapiclient.http import MediaIoBaseDownload
 from tools.pi_io import PiIo
 from RPi import GPIO
 
-# GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BOARD)
 DEBUG_MODE = False
 GOOGLE_DRIVE_ENABLED = False
 
