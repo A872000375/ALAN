@@ -78,6 +78,7 @@ class PiIo:
             self.food_freq_q.put(self.tk_vars['freq'].get())
             self.food_amt_q.put(self.tk_vars['amt'].get())
 
+            print('Receiving...')
             # Do all of our receiving calls here
             self.feeder_scheduler.receive_food_freq()
             self.feeder_scheduler.receive_food_amt()
@@ -118,7 +119,9 @@ class PiIo:
         while self.food_level_q.qsize() > 0:
             try:
                 self.food_level = self.food_level_q.get()
+                print('Received food level')
                 self.update_feeder_level()
+                print('Updated food level')
             except queue.Empty:
                 return
 
@@ -126,6 +129,7 @@ class PiIo:
         while self.temp_q.qsize() > 0:
             try:
                 self.temp_target = self.temp_q.get()
+                print('Received temp target')
             except queue.Empty:
                 pass
 
