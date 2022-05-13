@@ -14,6 +14,15 @@ import queue
 import wiringpi as wiring
 
 
+def ms_to_duty(ms: float):
+    period = 20  # 20ms period for this servo
+    return (ms / period) * 100
+
+
+def hours_to_seconds(num_hours):
+    return num_hours * 3600
+
+
 class ServoController:
 
     def __init__(self, starting_angle=0):
@@ -23,75 +32,22 @@ class ServoController:
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
         self.SERVO_DELAY = 1  # Controls the speed of the servo
-        self.FORWARD = 10
-        # wiring.wiringPiSetupGpio()
-        # wiring.pinMode(self.SERVO_PIN, wiring.GPIO.PWM_OUTPUT)
-        # wiring.pwmSetMode(wiring.GPIO.PWM_MODE_MS)  # Set to ms stype
-        #
-        # # divide down clock
-        # # pulse value of 1 is fast, 75 is stop
-        # wiring.pwmSetClock(384)
-        # wiring.pwmSetRange(1000)
-        #
-        # GPIO.setup(self.SERVO_PIN, GPIO.OUT)
-        # self.servo = GPIO.PWM(self.SERVO_PIN, 50)
-        # self.servo.start(0)  # Start up the servo, but don't move it yet
+        self.CCW_DUTY = 1
+        self.STOP_DUTY = 0
+        self.CW_DUTY
+        self.SECONDS_PER_UNIT_FOOD = 5
         GPIO.setup(self.SERVO_PIN, GPIO.OUT)
+        self.p = GPIO.PWM(self.SERVO_PIN, 50)
+        self.p.start(0)
 
-        # self.current_angle = starting_angle
-        # self.set_angle(self.current_angle)
-
-    def test_servo(self):
-
-        print('PWM start')
-        p = GPIO.PWM(self.SERVO_PIN, 50)
-        p.start(0)
-        duty = self.ms_to_duty(1)
-        p.ChangeDutyCycle(duty)
-        print(duty)
-        sleep(9999)
-        print('Ended')
-
-    def send_pulse(self, pulse):
-        wiring.pwmWrite(self.SERVO_PIN, pulse)
-
-    def ms_to_duty(self, ms: float):
-        period = 20
-        reverse = 1
-        stop = 1.5
-        forward = 2
-        freq = 50
-        return (ms/period) * 100
-
-    def set_angle(self, degree):
-        if degree > 180 or degree < 0:
-            print('Invalid servo degree.')
-            return
-        self.servo.ChangeDutyCycle(self.deg_to_duty(degree))
-        self.current_angle = degree
-
-    def deg_to_duty(self, deg):
-        return (deg - 0) * (self.MAX_DUTY - self.MIN_DUTY) / 180 + self.MIN_DUTY
-
-    def operate_feeder(self, units_of_food: int):
-        # Each unit of food corresponds to 0.1 second of food dispensing
-        operation_time_sec = units_of_food * 0.1
-        self.open_feeder()
-        sleep(operation_time_sec)
-        self.close_feeder()
-
-    def open_feeder(self):
-        self.set_angle(self.OPEN_POSITION)
-
-    def close_feeder(self):
-        self.set_angle(self.CLOSE_POSITION)
-
-    def get_current_angle(self):
-        return self.current_angle
-
-
-def hours_to_seconds(num_hours):
-    return num_hours * 3600
+    def operate_feeder(self, units_of_food):
+        if units_of_food < 1:
+            print('Must specify at least 1 unit of food.')
+        print('Operating servo...')
+        duty = ms_to_duty(self.CCW_DUTY)
+        self.p.ChangeDutyCycle(duty)
+        sleep(units_of_food * self.SECONDS_PER_UNIT_FOOD)
+        self.p.ChangeDutyCycle(0)
 
 
 class FeederScheduler:
@@ -119,7 +75,7 @@ class FeederScheduler:
             try:
                 food_amt_num = int(self.food_amt)
             except ValueError:
-                print('ERROR: FOOD FREQUENCY VALUE IS NOT A NUMBER')
+                print('ERROR: FOOD AMOUNT VALUE IS NOT A NUMBER')
                 sleep(5)
                 continue
             self.servo.operate_feeder(food_amt_num)
@@ -128,7 +84,7 @@ class FeederScheduler:
                   f'or {hours_to_seconds(self.food_freq)} seconds.')
             food_freq_num = 0
             try:
-                food_freq_num = int(self.food_freq)
+                food_freq_num = float(self.food_freq)
             except ValueError:
                 print('ERROR: FOOD FREQUENCY VALUE IS NOT A NUMBER')
                 sleep(5)
