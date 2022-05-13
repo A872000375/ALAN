@@ -41,7 +41,7 @@ class ServoController:
         # self.set_angle(self.current_angle)
 
     def test_servo(self):
-        sleep(10)
+        sleep(3)
         print('PWM start')
         p = GPIO.PWM(self.SERVO_PIN, 50)
         p.start(0)
