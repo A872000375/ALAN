@@ -36,15 +36,15 @@ class ServoController:
         # self.servo = GPIO.PWM(self.SERVO_PIN, 50)
         # self.servo.start(0)  # Start up the servo, but don't move it yet
 
-        # TODO: REMOVE SERVO TESTING!!!!!!
-        self.test_servo()
+        # # TODO: REMOVE SERVO TESTING!!!!!!
+        # self.test_servo()
 
         # self.current_angle = starting_angle
         # self.set_angle(self.current_angle)
 
     def test_servo(self):
         while True:
-            pulse_val = 75
+            pulse_val = 1024
             sleep(self.SERVO_DELAY)
             self.send_pulse(pulse_val)
             print(f'pulse: {self.SERVO_DELAY} delay, {pulse_val} pulse val')
