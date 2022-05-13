@@ -45,13 +45,23 @@ class ServoController:
 
         print('PWM start')
         p = GPIO.PWM(self.SERVO_PIN, 50)
-        p.start(10)
-        p.ChangeDutyCycle(5)
+        p.start(0)
+        duty = self.ms_to_duty(1)
+        p.ChangeDutyCycle(duty)
+        print(duty)
         sleep(9999)
         print('Ended')
 
     def send_pulse(self, pulse):
         wiring.pwmWrite(self.SERVO_PIN, pulse)
+
+    def ms_to_duty(self, ms: float):
+        period = 20
+        reverse = 1
+        stop = 1.5
+        forward = 2
+        freq = 50
+        return ms/period
 
     def set_angle(self, degree):
         if degree > 180 or degree < 0:
