@@ -31,13 +31,13 @@ class SonarReader:
 
         MAX_PING_DURATION = 10
         timeout = start_time + MAX_PING_DURATION
-        while IO.input(self.pin_map['sonar_echo']) == 0 and start_time < timeout:
+        while IO.input(self.pin_map['sonar_echo']) == 0:
             # While input reads on
             start_time = time.time()
         # print('reading ping value 1')
         end_time = time.time()
         timeout = end_time + MAX_PING_DURATION
-        while IO.input(self.pin_map['sonar_echo']) == 1 and end_time < timeout:
+        while IO.input(self.pin_map['sonar_echo']) == 1:
             end_time = time.time()
         # print('read ping value of 1')
         duration = end_time - start_time
