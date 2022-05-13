@@ -19,7 +19,7 @@ class HeaterController:
 
     # Desc: Sets the heater to on (True) or off (False)
     def heater_toggle(self, status: bool):
-        previous = self.get_heater_status_readable()
+        # previous = self.get_heater_status_readable()
         if status is True:
             GPIO.output(self.HEATER_PIN, GPIO.HIGH)
         else:
