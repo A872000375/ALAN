@@ -80,8 +80,7 @@ class FeederScheduler:
                 continue
             self.servo.operate_feeder(food_amt_num)
             print('Operating servo...')
-            print(f'Next feed in {self.food_freq} hours, '
-                  f'or {hours_to_seconds(self.food_freq)} seconds.')
+
             food_freq_num = 0
             try:
                 food_freq_num = float(self.food_freq)
@@ -89,6 +88,8 @@ class FeederScheduler:
                 print('ERROR: FOOD FREQUENCY VALUE IS NOT A NUMBER')
                 sleep(5)
                 continue
+            print(f'Next feed in {food_freq_num} hours, '
+                  f'or {hours_to_seconds(food_freq_num)} seconds.')
             sleep(hours_to_seconds(food_freq_num))
 
         self.stop_thread = False
