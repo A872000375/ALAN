@@ -22,7 +22,7 @@ class ServoController:
         self.SERVO_PIN = 27  # GPIO 27, BOARD 13
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
-        self.SERVO_DELAY = 1000  # Controls the speed of the servo
+        self.SERVO_DELAY = 1  # Controls the speed of the servo
         wiring.wiringPiSetupGpio()
         wiring.pinMode(self.SERVO_PIN, wiring.GPIO.PWM_OUTPUT)
         wiring.pwmSetMode(wiring.GPIO.PWM_MODE_MS)  # Set to ms stype
