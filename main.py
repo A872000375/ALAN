@@ -296,7 +296,7 @@ update_temp_label(None)
 # This validation method makes sure that users can only enter integers
 # Must be before the Entry initialization
 def validate_numerical_entry(value):
-    if str.isdigit(value) or value == '':
+    if str.isdigit(value) or value == '' or str.isdecimal():
         return True
     else:
         return False
