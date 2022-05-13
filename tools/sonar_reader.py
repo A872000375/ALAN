@@ -13,8 +13,8 @@ class SonarReader:
         self.EMPTY_DISTANCE = 6.3
         self.FULL_DISTANCE = 0.5
         self.pin_map = {
-            'sonar_trig': 10,  # RED CABLE
-            'sonar_echo': 11,  # ORANGE CABLE
+            'sonar_trig': 13,  # RED CABLE
+            'sonar_echo': 15,  # ORANGE CABLE
         }
         # TODO: Redo sonar pins for GPIO.BOARD configuration
         IO.setup(self.pin_map['sonar_trig'], IO.OUT)
