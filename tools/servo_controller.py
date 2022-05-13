@@ -23,6 +23,7 @@ class ServoController:
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
         self.SERVO_DELAY = 1  # Controls the speed of the servo
+        self.FORWARD = 10
         # wiring.wiringPiSetupGpio()
         # wiring.pinMode(self.SERVO_PIN, wiring.GPIO.PWM_OUTPUT)
         # wiring.pwmSetMode(wiring.GPIO.PWM_MODE_MS)  # Set to ms stype
@@ -45,7 +46,7 @@ class ServoController:
         print('PWM start')
         p = GPIO.PWM(self.SERVO_PIN, 50)
         p.start(10)
-        p.ChangeDutyCycle(100)
+        p.ChangeDutyCycle(1)
         sleep(9999)
         print('Ended')
 
