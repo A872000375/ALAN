@@ -19,7 +19,7 @@ class ServoController:
     def __init__(self, starting_angle=0):
         self.MIN_DUTY = 5
         self.MAX_DUTY = 10
-        self.SERVO_PIN = 12  # GPIO 12, BOARD 32 (PWM0)
+        self.SERVO_PIN = 32  # GPIO 12, BOARD 32 (PWM0)
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
         self.SERVO_DELAY = 1  # Controls the speed of the servo
@@ -43,19 +43,17 @@ class ServoController:
     def test_servo(self):
         sleep(10)
         print('PWM start')
-        p = GPIO.PWM(self.SERVO_PIN, 100)
-        p.start(5)
-        print(2.5)
-        p.ChangeDutyCycle(2.5)
+        p = GPIO.PWM(self.SERVO_PIN, 50)
+        p.start(0)
+        print(1900)
+        p.ChangeDutyCycle(1900)  # CW
         sleep(5)
-        print(11.5)
-        p.ChangeDutyCycle(11.5)
+        print(1900)
+        p.ChangeDutyCycle(1000)  # CCW
         sleep(5)
-        print(20.5)
-        p.ChangeDutyCycle(20.5)
+        print(1900)
+        p.ChangeDutyCycle(1450)  # STOP
         sleep(5)
-        print(11.5)
-        p.ChangeDutyCycle(11.5)
 
     def send_pulse(self, pulse):
         wiring.pwmWrite(self.SERVO_PIN, pulse)
