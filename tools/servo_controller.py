@@ -35,7 +35,7 @@ class ServoController:
         self.CCW_DUTY = 1
         self.STOP_DUTY = 0
         self.CW_DUTY = 2
-        self.SECONDS_PER_UNIT_FOOD = 5
+        self.SECONDS_PER_UNIT_FOOD = 1
         GPIO.setup(self.SERVO_PIN, GPIO.OUT)
         self.p = GPIO.PWM(self.SERVO_PIN, 50)
         self.p.start(0)
