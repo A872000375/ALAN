@@ -133,6 +133,7 @@ class PiIo:
     def check_temperature(self):
         while True:
             if self.kill_thread:
+                IO.setmode(IO.BOARD)
                 self.heat_control.heater_toggle(False)  # Turn off heater when exiting
                 break
             current_temp = self.get_temp_f()
