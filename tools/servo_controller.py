@@ -34,7 +34,7 @@ class ServoController:
         self.SERVO_DELAY = 1  # Controls the speed of the servo
         self.CCW_DUTY = 1
         self.STOP_DUTY = 0
-        self.CW_DUTY
+        self.CW_DUTY = 2
         self.SECONDS_PER_UNIT_FOOD = 5
         GPIO.setup(self.SERVO_PIN, GPIO.OUT)
         self.p = GPIO.PWM(self.SERVO_PIN, 50)
