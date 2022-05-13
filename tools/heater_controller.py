@@ -13,8 +13,8 @@ class HeaterController:
 
     def __init__(self):
         # Heater setup
-        self.HEATER_PIN = 36
-        # GPIO.setmode(GPIO.BOARD)
+        self.HEATER_PIN = 36 # BOARD 36, BCM 16
+        GPIO.setmode(GPIO.BOARD)
         GPIO.setup(self.HEATER_PIN, GPIO.OUT)
 
     # Desc: Sets the heater to on (True) or off (False)

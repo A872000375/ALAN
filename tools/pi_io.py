@@ -153,7 +153,7 @@ class PiIo:
             temp_needed = target_temp - current_temp
             print('Current Temp:', current_temp)
             print('Received Target Temp:', target_temp)
-            # print('Temp Deltas:', temp_needed)
+            print('Temp Deltas:', temp_needed)
             if temp_needed > 0.5:
                 # Turn on the heater
                 print('Heater turned ON.')
