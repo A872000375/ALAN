@@ -19,7 +19,7 @@ class ServoController:
     def __init__(self, starting_angle=0):
         self.MIN_DUTY = 5
         self.MAX_DUTY = 10
-        self.SERVO_PIN = 12  # GPIO 18, BOARD 12 # PCM_CLK
+        self.SERVO_PIN = 18  # GPIO 18, BOARD 12 # PCM_CLK
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
         self.SERVO_DELAY = 1  # Controls the speed of the servo
