@@ -8,11 +8,11 @@ import busio
 # Import the PCA9685 module.
 from adafruit_pca9685 import PCA9685
 from adafruit_motor.servo import Servo
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 from queue import Queue
 import queue
 import wiringpi as wiring
-# from RPIO import PWM
+
 
 class ServoController:
 
@@ -23,42 +23,39 @@ class ServoController:
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
         self.SERVO_DELAY = 1  # Controls the speed of the servo
-        wiring.wiringPiSetupGpio()
-        wiring.pinMode(self.SERVO_PIN, wiring.GPIO.PWM_OUTPUT)
-        wiring.pwmSetMode(wiring.GPIO.PWM_MODE_MS)  # Set to ms stype
-
-        # divide down clock
-        # pulse value of 1 is fast, 75 is stop
-        wiring.pwmSetClock(384)
-        wiring.pwmSetRange(1000)
+        # wiring.wiringPiSetupGpio()
+        # wiring.pinMode(self.SERVO_PIN, wiring.GPIO.PWM_OUTPUT)
+        # wiring.pwmSetMode(wiring.GPIO.PWM_MODE_MS)  # Set to ms stype
+        #
+        # # divide down clock
+        # # pulse value of 1 is fast, 75 is stop
+        # wiring.pwmSetClock(384)
+        # wiring.pwmSetRange(1000)
         #
         # GPIO.setup(self.SERVO_PIN, GPIO.OUT)
         # self.servo = GPIO.PWM(self.SERVO_PIN, 50)
         # self.servo.start(0)  # Start up the servo, but don't move it yet
-
-        # # TODO: REMOVE SERVO TESTING!!!!!!
-        # self.test_servo()
+        GPIO.setup(self.SERVO_PIN, GPIO.OUT)
 
         # self.current_angle = starting_angle
         # self.set_angle(self.current_angle)
 
     def test_servo(self):
-        for pulse in range(0,1024, 10):
-            self.send_pulse(pulse)
-            sleep(0.2)
-        # while True:
-        #     pulse_val = 70
-        #     sleep(self.SERVO_DELAY)
-        #     self.send_pulse(pulse_val)
-        #     print(f'pulse: {self.SERVO_DELAY} delay, {pulse_val} pulse val')
-            # print('Clockwise')
-            # for pulse in range(50, 250, 1):
-            #     self.send_pulse(pulse)
-            #     sleep(self.SERVO_DELAY)
-            # print('Counterclockwise')
-            # for pulse in range(250, 50, -1):
-            #     self.send_pulse(pulse)
-            #     sleep(self.SERVO_DELAY)
+        sleep(10)
+        print('PWM start')
+        p = GPIO.PWM(self.SERVO_PIN, 100)
+        p.start(5)
+        print(2.5)
+        p.ChangeDutyCycle(2.5)
+        sleep(5)
+        print(11.5)
+        p.ChangeDutyCycle(11.5)
+        sleep(5)
+        print(20.5)
+        p.ChangeDutyCycle(20.5)
+        sleep(5)
+        print(11.5)
+        p.ChangeDutyCycle(11.5)
 
     def send_pulse(self, pulse):
         wiring.pwmWrite(self.SERVO_PIN, pulse)
