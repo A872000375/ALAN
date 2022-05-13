@@ -19,7 +19,7 @@ class ServoController:
     def __init__(self, starting_angle=0):
         self.MIN_DUTY = 5
         self.MAX_DUTY = 10
-        self.SERVO_PIN = 12  # GPIO 12, BOARD 32 (PWM0)
+        self.SERVO_PIN = 32  # GPIO 12, BOARD 32 (PWM0)
         self.OPEN_POSITION = 30
         self.CLOSE_POSITION = 0
         self.SERVO_DELAY = 1  # Controls the speed of the servo
@@ -44,7 +44,7 @@ class ServoController:
 
     def test_servo(self):
         while True:
-            pulse_val = 1000
+            pulse_val = 70
             sleep(self.SERVO_DELAY)
             self.send_pulse(pulse_val)
             print(f'pulse: {self.SERVO_DELAY} delay, {pulse_val} pulse val')
