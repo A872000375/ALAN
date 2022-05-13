@@ -45,7 +45,7 @@ class ServoController:
         print('PWM start')
         p = GPIO.PWM(self.SERVO_PIN, 50)
         p.start(10)
-        p.ChangeDutyCycle(10)
+        p.ChangeDutyCycle(100)
         sleep(9999)
         print('Ended')
 
