@@ -43,12 +43,11 @@ class ServoController:
     def test_servo(self):
 
         print('PWM start')
-        p = GPIO.PWM(self.SERVO_PIN, 500)
-        p.start(0)
-        sleep(5)
-        for n in range(0, 100, 1):
-            p.ChangeDutyCycle(n)
-            sleep(1)
+        p = GPIO.PWM(self.SERVO_PIN, 50)
+        p.start(10)
+        p.ChangeDutyCycle(10)
+        sleep(60)
+        print('Ended')
 
     def send_pulse(self, pulse):
         wiring.pwmWrite(self.SERVO_PIN, pulse)
