@@ -61,7 +61,7 @@ class ServoController:
         stop = 1.5
         forward = 2
         freq = 50
-        return ms/period
+        return (ms/period) * 100
 
     def set_angle(self, degree):
         if degree > 180 or degree < 0:
