@@ -40,3 +40,4 @@ class TempReader:
 
 temp_reader = TempReader()  
 print(temp_reader.read_temp())
+
