@@ -1,5 +1,10 @@
-SFT Project.
+Smart Fish Tank project for Senior Project.
 
-TODO: Merge login and configuration systems
-
-TODO: Decide whether to use Google OAuth to backup JSON files to cloud or just use a local JSON file only.
+Components:
+- Ultrasonic sensor
+- Temp reader
+- Fish Tank heater
+- Relay module (SPST)
+- A lot of wires
+- A continuous servo
+- Raspberry Pi
